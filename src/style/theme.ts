@@ -9,6 +9,9 @@ export const theme = extendTheme({
         },
         background: {
             primary: "#FFFFFF"
+        },
+        border: {
+            item: '#E6E6E6'
         }
     }
 })

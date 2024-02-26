@@ -1,4 +1,5 @@
 import { ProfileData } from "@/types";
+import { produce } from "immer";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
@@ -16,7 +17,7 @@ export const useUserStore = create(persist<UserState>((set, get) => ({
     sessionTokenRequestedTime: null,
     setSessionTokenRequestedTime: (sessionTokenRequestedTime: Date) => set({ sessionTokenRequestedTime }),
     userProfile: null,
-    setUserProfile: (userProfile: ProfileData) => set({ userProfile }),
+    setUserProfile: (userProfile: ProfileData) => set(produce((state) => state.userProfile = userProfile)),
 }), {
     name: "user-storage",
     getStorage: () => localStorage,

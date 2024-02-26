@@ -1,5 +1,8 @@
+"use client";
+
 import { EvolveNavBar } from "@/components";
 import { Flex } from "@chakra-ui/react";
+import dynamic from "next/dynamic";
 
 export default function DashboardLayout({
   children,

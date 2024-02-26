@@ -42,12 +42,12 @@ export default function Dashboard() {
 
       setSessionToken(sessionToken.access_token);
       setRequestedTime(new Date());
-      router.replace(pathname.split("?")[0]);
     }
 
     if (code && !sessionToken) {
       getSessionToken(code as string);
     }
+    router.replace(pathname.split("?")[0]);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [code]);
 
