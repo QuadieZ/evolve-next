@@ -31,7 +31,7 @@ export type ShopStyle = {
         primaryColor: string
         secondaryColor: string
     },
-    logo: File,
+    logo: File | null,
     shopLayout: ShopLayout
     shopProductCardLayout: ShopProductCardLayout
 }

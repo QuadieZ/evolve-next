@@ -216,17 +216,18 @@ const ChooseProductCardStyle = ({
 
 export default function Page() {
   const currentShop = useShopStore((state) => state.currentShop);
+  const setDraftStyle = useShopStore((state) => state.setDraftStyle);
   const router = useRouter();
 
   useEffect(() => {
     if (currentShop?.hasOnboarded) {
-      router.push(`/dashboard/shop/${currentShop.shopId}`);
+      router.replace(`/dashboard/shop/${currentShop.shopId}`);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const name = currentShop?.shopName;
-  const [currentPage, setCurrentPage] = useState(3);
+  const [currentPage, setCurrentPage] = useState(0);
   const [primaryColor, setPrimaryColor] = useState("#000000");
   const [secondaryColor, setSecondaryColor] = useState("#000000");
   const [logo, setLogo] = useState<File | null>(null);
@@ -266,6 +267,21 @@ export default function Page() {
     setCurrentPage((prev) => prev + 1);
   }
 
+  function handleConfirmClick() {
+    setDraftStyle({
+      colors: {
+        primaryColor,
+        secondaryColor,
+      },
+      logo,
+      shopLayout: layoutStyle,
+      shopProductCardLayout: productCardStyle,
+    });
+    router.replace(
+      `/dashboard/shop/${currentShop?.shopId}/editor?isDraft=true`
+    );
+  }
+
   return (
     <Stack align="center" w="100%" suppressHydrationWarning gap={12}>
       <Center flexDir="column">
@@ -291,7 +307,7 @@ export default function Page() {
         )}
         {currentPage === lastPage && (
           <Button
-            onClick={handleNextPageClick}
+            onClick={handleConfirmClick}
             bgColor="brand.primary"
             color="white"
             _hover={{ bgColor: "brand.hoverPrimary" }}

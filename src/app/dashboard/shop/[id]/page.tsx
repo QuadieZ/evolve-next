@@ -47,7 +47,7 @@ export default function Page({ params }: { params: { id: string } }) {
       setCurrentShop(response);
 
       if (!response.hasOnboarded) {
-        navigation.push(`/dashboard/shop/${shopId}/onboarding`);
+        navigation.replace(`/dashboard/shop/${shopId}/onboarding`);
       }
       setIsLoading(false);
     }

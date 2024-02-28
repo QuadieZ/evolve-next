@@ -31,16 +31,6 @@ const mockShops: ShopPreviewData[] = [
     shopName: "Shop 2",
     ownerId: "1",
   },
-  {
-    shopId: "3",
-    shopName: "Shop 3",
-    ownerId: "1",
-  },
-  {
-    shopId: "4",
-    shopName: "Shop 4",
-    ownerId: "1",
-  },
 ];
 
 export default function Dashboard() {
