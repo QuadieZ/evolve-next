@@ -20,5 +20,7 @@ export const useUserStore = create(persist<UserState>((set, get) => ({
     setUserProfile: (userProfile: ProfileData) => set(produce((state) => state.userProfile = userProfile)),
 }), {
     name: "user-storage",
-    getStorage: () => localStorage,
+    onRehydrateStorage: (state) => {
+        console.log(state)
+    }
 }))

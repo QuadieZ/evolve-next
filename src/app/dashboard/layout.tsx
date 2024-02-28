@@ -1,6 +1,6 @@
 "use client";
 
-import { EvolveNavBar } from "@/components";
+import { EvolveContainer, EvolveNavBar } from "@/components";
 import { Flex } from "@chakra-ui/react";
 import dynamic from "next/dynamic";
 
@@ -10,9 +10,9 @@ export default function DashboardLayout({
   children: React.ReactNode;
 }) {
   return (
-    <Flex flexDir="column">
+    <Flex flexDir="column" h="100vh">
       <EvolveNavBar />
-      {children}
+      <EvolveContainer>{children}</EvolveContainer>
     </Flex>
   );
 }

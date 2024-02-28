@@ -5,7 +5,8 @@ export const theme = extendTheme({
         brand: {
             primary: "#00C700",
             contrast: "#FFFFFF",
-            hoverPrimary: "#12BB12"
+            hoverPrimary: "#12BB12",
+            secondary: '#8AE99C'
         },
         background: {
             primary: "#FFFFFF"

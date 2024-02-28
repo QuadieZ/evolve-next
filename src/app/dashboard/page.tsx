@@ -1,10 +1,47 @@
 "use client";
 
-import { useUserStore } from "@/state";
-import { Text } from "@chakra-ui/react";
-import { NextPageContext } from "next";
+import NextLink from "next/link";
+import { EvolveDashboardHeader } from "@/components";
+import { useShopStore, useUserStore } from "@/state";
+import { ShopPreviewData } from "@/types";
+import {
+  Box,
+  Card,
+  CardBody,
+  Flex,
+  Heading,
+  Image,
+  Link,
+  Stack,
+  Text,
+} from "@chakra-ui/react";
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
-import { use, useEffect } from "react";
+import { useEffect } from "react";
+
+const mockShops: ShopPreviewData[] = [
+  {
+    shopId: "1",
+    shopName: "Shop 1",
+    shopPictureUrl: "https://via.placeholder.com/150",
+    shopDescription: "This is a shop description",
+    ownerId: "1",
+  },
+  {
+    shopId: "2",
+    shopName: "Shop 2",
+    ownerId: "1",
+  },
+  {
+    shopId: "3",
+    shopName: "Shop 3",
+    ownerId: "1",
+  },
+  {
+    shopId: "4",
+    shopName: "Shop 4",
+    ownerId: "1",
+  },
+];
 
 export default function Dashboard() {
   const router = useRouter();
@@ -18,6 +55,12 @@ export default function Dashboard() {
   );
   const userProfile = useUserStore((state: any) => state.userProfile);
   const setUserProfile = useUserStore((state: any) => state.setUserProfile);
+  const clearCurrentShop = useShopStore((state: any) => state.clearCurrentShop);
+
+  useEffect(() => {
+    clearCurrentShop();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
     async function getSessionToken(code: string) {
@@ -70,5 +113,49 @@ export default function Dashboard() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [sessionToken]);
 
-  return <Text>Dashboard</Text>;
+  return (
+    <Stack gap={8}>
+      <EvolveDashboardHeader
+        header={
+          <Heading>
+            Welcome to{" "}
+            <Box as="span" color="brand.primary">
+              Evolve
+            </Box>
+          </Heading>
+        }
+        desciption="Evolve your LINE Shopping storefronts"
+      />
+      <Heading as="h2" fontSize="lg">
+        Which shop do you want to manage?
+      </Heading>
+      <Flex gap={4} flexWrap="wrap">
+        {mockShops.map((shop) => (
+          <Link
+            key={shop.shopId}
+            href={`/dashboard/shop/${shop.shopId}`}
+            as={NextLink}
+            cursor="pointer"
+          >
+            <Card w="27vw" h="40vh">
+              <CardBody>
+                <Image
+                  src={shop.shopPictureUrl ?? "/shopPlaceholder.jpeg"}
+                  alt={shop.shopName}
+                  borderRadius="lg"
+                  w="100%"
+                  objectFit={"cover"}
+                  h="150px"
+                />
+                <Stack mt="6" spacing="3">
+                  <Heading size="md">{shop.shopName}</Heading>
+                  {shop.shopDescription && <Text>{shop.shopDescription}</Text>}
+                </Stack>
+              </CardBody>
+            </Card>
+          </Link>
+        ))}
+      </Flex>
+    </Stack>
+  );
 }
