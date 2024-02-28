@@ -33,11 +33,10 @@ const mockShops: ShopPreviewData[] = [
   },
 ];
 
-export default function Dashboard() {
+export default function Dashboard({ params }: { params: { code: string } }) {
   const router = useRouter();
   const pathname = usePathname();
-  const params = useSearchParams();
-  const code = params.get("code");
+  const code = params.code;
   const sessionToken = useUserStore((state: any) => state.sessionToken);
   const setSessionToken = useUserStore((state: any) => state.setSessionToken);
   const setRequestedTime = useUserStore(
