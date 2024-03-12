@@ -9,7 +9,7 @@ export type ShopNameProps = {
 export const ShopName = (props: ShopNameProps) => {
   const { name, description } = props;
   return (
-    <Stack w="100%" spacing={4}>
+    <Stack w="100%" spacing={4} pos="relative">
       <Stack spacing={1}>
         <Heading fontWeight="medium" fontSize="xl">
           {name}

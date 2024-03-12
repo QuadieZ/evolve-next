@@ -31,7 +31,7 @@ export const CategorySelector = (props: CategorySelectorProps) => {
   }
 
   return (
-    <Stack w="100%" my={4}>
+    <Stack w="100%" my={4} pos="relative">
       <Heading fontWeight="medium" fontSize="lg">
         Categories
       </Heading>

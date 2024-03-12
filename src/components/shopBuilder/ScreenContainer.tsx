@@ -11,6 +11,8 @@ export const ScreenContainer = (props: ScreenContainerProps) => {
       border="1px solid"
       borderColor="brand.primary"
       p={12}
+      m={8}
+      overflowY="scroll"
     >
       {props.children}
     </Stack>

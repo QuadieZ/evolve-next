@@ -6,7 +6,7 @@ export const EvolveContainer = ({
   children: React.ReactNode;
 }) => {
   return (
-    <Flex overflowY="scroll" flexDir="column" flex={1} w="100%" px={16} py={12}>
+    <Flex flexDir="column" flex={1} w="100%" px={16} py={12} pos="relative">
       {children}
     </Flex>
   );

@@ -1,3 +1,5 @@
+import { CategorySelectorProps, ShopNameProps } from "@/components";
+
 export type ProfileData = {
     display_name: string;
     pictureUrl: string
@@ -35,3 +37,17 @@ export type ShopStyle = {
     shopLayout: ShopLayout
     shopProductCardLayout: ShopProductCardLayout
 }
+
+export type Component = {
+    name: "ShopTitle"
+    props: ShopNameProps
+} | {
+    name: "ProductCategories"
+    props: CategorySelectorProps
+} |
+{
+    name: "Divider"
+}
+
+export type ComponentType = Component['name']
+export type ComponentProps = ShopNameProps | CategorySelectorProps
