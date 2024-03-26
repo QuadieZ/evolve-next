@@ -1,4 +1,4 @@
-import { Stack } from "@chakra-ui/react";
+import { Heading, Stack } from "@chakra-ui/react";
 import { HorizontalProductCard, VerticalProductCard } from ".";
 
 export type ProductData = {
@@ -12,38 +12,48 @@ export type ProductsListProps = {
   variant?: "full" | "compact";
   products: ProductData[];
   productCardVariant?: "clear" | "modern";
+  isFeatured?: boolean;
 };
 
 export const ProductsList = (props: ProductsListProps) => {
-  const { variant = "full", products, productCardVariant = "modern" } = props;
+  const {
+    variant = "full",
+    products,
+    productCardVariant = "modern",
+    isFeatured,
+  } = props;
 
   return (
-    <Stack
-      flexDir="row"
-      w="100%"
-      flexWrap="wrap"
-      justify="space-between"
-      spacing={3}
-      pos="relative"
-    >
-      {products.map((product) => {
-        if (variant === "full") {
+    <Stack flexDir="column" w="100%" pos="relative">
+      <Heading fontWeight="medium" fontSize="lg">
+        {isFeatured ? "Featured Products" : "Our Products"}
+      </Heading>
+      <Stack
+        flexDir="row"
+        flexWrap={isFeatured ? "nowrap" : "wrap"}
+        justify="space-between"
+        spacing={3}
+      >
+        {products.map((product) => {
+          if (variant === "full") {
+            return (
+              <HorizontalProductCard
+                {...product}
+                key={product.title}
+                variant={productCardVariant}
+              />
+            );
+          }
           return (
-            <HorizontalProductCard
+            <VerticalProductCard
               {...product}
               key={product.title}
               variant={productCardVariant}
+              isFeatured={isFeatured}
             />
           );
-        }
-        return (
-          <VerticalProductCard
-            {...product}
-            key={product.title}
-            variant={productCardVariant}
-          />
-        );
-      })}
+        })}
+      </Stack>
     </Stack>
   );
 };

@@ -26,6 +26,7 @@ import {
 } from "@chakra-ui/react";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { EvolveButton } from "./EvolveButton";
 
 export const EvolveNavBar = () => {
   const router = useRouter();
@@ -33,9 +34,12 @@ export const EvolveNavBar = () => {
   const pathname = usePathname().split("/");
   const userProfile = useUserStore((state) => state.userProfile);
   console.log(userProfile?.pictureUrl);
+  const draftStyle = useShopStore((state) => state.draftStyle);
+  const setShopStyle = useShopStore((state) => state.setShopStyle);
 
   const showDashboardMenu =
     pathname.includes("shop") && !pathname.includes("onboarding");
+  const isEditor = pathname.includes("editor");
   const [username, setUsername] = useState<string>("");
   const [imageSrc, setImageSrc] = useState<string>("");
 
@@ -43,6 +47,12 @@ export const EvolveNavBar = () => {
     userProfile?.pictureUrl && setImageSrc(userProfile?.pictureUrl);
     userProfile?.display_name && setUsername(userProfile?.display_name);
   }, [userProfile?.pictureUrl, userProfile?.display_name]);
+
+  function handlePublish() {
+    // save to db
+    setShopStyle(draftStyle!);
+    router.push(`/dashboard/shop/${shopId}`);
+  }
 
   return (
     <Flex
@@ -53,6 +63,9 @@ export const EvolveNavBar = () => {
       px={8}
       borderBottom="1px"
       borderColor="border.item"
+      position="sticky"
+      zIndex={100}
+      bg="white"
     >
       <Flex
         gap={2}
@@ -70,7 +83,19 @@ export const EvolveNavBar = () => {
           by DevA
         </Heading>
       </Flex>
-      <Flex w="fit-content" gap={4}>
+      <Flex w="fit-content" gap={4} h="100%" align="center" pos="relative">
+        {isEditor && (
+          <Button
+            bg="brand.primary"
+            color="white"
+            _hover={{
+              bg: "brand.hoverPrimary",
+            }}
+            onClick={handlePublish}
+          >
+            Publish
+          </Button>
+        )}
         {showDashboardMenu && (
           <Menu>
             <MenuButton
@@ -120,7 +145,13 @@ export const EvolveNavBar = () => {
             </MenuList>
           </Menu>
         )}
-        <Avatar src={imageSrc} name={username} boxSize="6vh" />
+        <Avatar
+          src={imageSrc}
+          name={username}
+          pos="relative"
+          h="50%"
+          w="auto"
+        />
       </Flex>
     </Flex>
   );

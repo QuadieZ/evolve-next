@@ -1,6 +1,10 @@
-import { extendTheme } from "@chakra-ui/react";
+import { ThemeConfig, extendTheme } from "@chakra-ui/react";
 
 export const theme = extendTheme({
+    config: {
+        initialColorMode: 'light',
+        useSystemColorMode: false
+    } as ThemeConfig,
     colors: {
         brand: {
             primary: "#00C700",
@@ -16,5 +20,5 @@ export const theme = extendTheme({
         border: {
             item: '#E6E6E6'
         }
-    }
+    },
 })

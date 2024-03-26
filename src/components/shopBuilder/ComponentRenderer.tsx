@@ -1,8 +1,13 @@
-import { ComponentProps, ComponentType } from "@/types";
+import { ComponentProps, ComponentType, ContainerDataProps } from "@/types";
 import {
   CategorySelector,
   CategorySelectorProps,
+  Container,
   Divider,
+  ImageBanner,
+  ImageBannerProps,
+  ProductsList,
+  ProductsListProps,
   ShopName,
   ShopNameProps,
 } from ".";
@@ -25,5 +30,25 @@ export const ComponentRenderer = (props: ComponentRendererProps) => {
 
   if (name === "ProductCategories") {
     return <CategorySelector {...(componentProps as CategorySelectorProps)} />;
+  }
+
+  if (name === "Container") {
+    const { children, ...rest } = componentProps as ContainerDataProps;
+
+    return (
+      <Container {...rest}>
+        {children.map((c, index) => (
+          <ComponentRenderer key={index} {...c} />
+        ))}
+      </Container>
+    );
+  }
+
+  if (name === "ImageBanner") {
+    return <ImageBanner {...(componentProps as ImageBannerProps)} />;
+  }
+
+  if (name === "ProductsList") {
+    return <ProductsList {...(componentProps as ProductsListProps)} />;
   }
 };

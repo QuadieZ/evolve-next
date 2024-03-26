@@ -8,6 +8,7 @@ export type ProductCardProps = {
   popularRank?: number;
   discountedPrice?: number;
   variant?: "clear" | "modern";
+  isFeatured?: boolean;
 };
 
 export const VerticalProductCard = (props: ProductCardProps) => {
@@ -19,11 +20,13 @@ export const VerticalProductCard = (props: ProductCardProps) => {
     popularRank,
     discountedPrice,
     variant = "modern",
+    isFeatured,
   } = props;
+  console.log(isFeatured);
 
   return (
     <Stack
-      w="48%"
+      w={isFeatured ? "50%" : "48%"}
       boxShadow={variant === "modern" ? "lg" : "none"}
       p={3}
       borderRadius="lg"
@@ -107,7 +110,7 @@ export const HorizontalProductCard = (props: ProductCardProps) => {
 
   return (
     <HStack
-      w="100%"
+      w={"100%"}
       h="20vh"
       boxShadow={variant === "modern" ? "lg" : "none"}
       p={3}

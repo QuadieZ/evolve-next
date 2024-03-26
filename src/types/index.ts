@@ -1,4 +1,12 @@
-import { CategorySelectorProps, ShopNameProps } from "@/components";
+import { CategorySelectorProps, ContainerProps, ImageBannerProps, ProductsListProps, ShopNameProps } from "@/components";
+
+export type ProductData = {
+    id: string;
+    name: string;
+    description: string;
+    price: number;
+    image: string;
+}
 
 export type ProfileData = {
     display_name: string;
@@ -25,8 +33,11 @@ export type ShopDetailData = {
     shopStyle?: ShopStyle
 }
 
-export type ShopLayout = 'MINIMAL' | 'COMPACT' | 'CLEAR'
+export type ShopLayout = 'MINIMAL' | 'CREATIVE' | 'CLEAR'
 export type ShopProductCardLayout = 'FULL' | 'COMPACT'
+export type ContainerDataProps = Omit<ContainerProps, 'children'> & {
+    children: Component[]
+}
 
 export type ShopStyle = {
     colors: {
@@ -47,7 +58,22 @@ export type Component = {
 } |
 {
     name: "Divider"
+} | {
+    name: 'Container'
+    props: ContainerDataProps
+} | {
+    name: 'ImageBanner'
+    props: ImageBannerProps
+} | {
+    name: 'ProductsList'
+    props: ProductsListProps
+}
+
+export type ComponentMap = {
+    [key: string]: Component[]
 }
 
 export type ComponentType = Component['name']
-export type ComponentProps = ShopNameProps | CategorySelectorProps
+export type ComponentProps = ShopNameProps | CategorySelectorProps | ContainerDataProps | ImageBannerProps | ProductsListProps
+
+export * from './dnd'

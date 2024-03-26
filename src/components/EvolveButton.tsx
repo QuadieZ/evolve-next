@@ -21,6 +21,7 @@ export const EvolveButton = (props: ButtonProps) => {
       borderRadius="full"
       variant={variant}
       h="28px"
+      w="fit-content"
       {...(variant === "solid" ? filledButtonStyle : {})}
       {...rest}
     />
