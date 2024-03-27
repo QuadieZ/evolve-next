@@ -48,6 +48,7 @@ export default function Page() {
         secondaryBackground: "#F0F0F0",
       });
       setComponents(LAYOUT_TEMPLATE.CREATIVE);
+      setIsLoading(false);
       return;
     }
     setShopTheme({
