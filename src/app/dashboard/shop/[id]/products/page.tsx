@@ -1,9 +1,12 @@
 "use client";
 
-import { EvolveDashboardHeader, EvolveSpinner } from "@/components";
+import {
+  EvolveDashboardHeader,
+  EvolveSpinner,
+  ProductData,
+} from "@/components";
 import { EvolveButton } from "@/components/EvolveButton";
 import { mockProducts } from "@/mockData";
-import { ProductData } from "@/types";
 import { Button, Flex, HStack, Stack, Text } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import DataTable, { TableColumn } from "react-data-table-component";
@@ -11,7 +14,7 @@ import DataTable, { TableColumn } from "react-data-table-component";
 const columns: TableColumn<ProductData>[] = [
   {
     name: "Product",
-    selector: (row) => row.name,
+    selector: (row) => row.title,
   },
   {
     name: "Description",

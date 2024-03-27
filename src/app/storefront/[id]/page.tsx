@@ -15,8 +15,6 @@ import {
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 
-const liffId = "2003749742-EwOA005Z";
-
 export default function Page() {
   const currentShopStyle = useShopStore(
     (state) => state.currentShop?.shopStyle
@@ -29,7 +27,7 @@ export default function Page() {
     async function initLiff() {
       const liff = (await import("@line/liff")).default;
       try {
-        await liff.init({ liffId });
+        await liff.init({ liffId: process.env.NEXT_PUBLIC_LIFF_ID! });
         await liff.ready;
       } catch (err) {
         console.log(err);
