@@ -18,21 +18,21 @@ export const CategorySelector = (props: CategorySelectorProps) => {
     if (variant === "clear") {
       return {
         bgColor: "transparent",
-        color: isSelected ? "brand.primary" : "black",
-        borderColor: isSelected ? "brand.primary" : "border.item",
+        color: isSelected ? "shop.primary" : "shop.text",
+        borderColor: isSelected ? "shop.primary" : "shop.secondaryBackground",
         borderWidth: "1px",
       };
     }
     return {
-      bgColor: isSelected ? "brand.primary" : "border.item",
-      color: isSelected ? "brand.contrast" : "black",
+      bgColor: isSelected ? "shop.primary" : "shop.border",
+      color: isSelected ? "shop.contrast" : "shop.text",
       borderColor: "transparent",
     };
   }
 
   return (
     <Stack w="100%" my={4} pos="relative">
-      <Heading fontWeight="medium" fontSize="lg">
+      <Heading fontWeight="medium" fontSize="lg" color="shop.content">
         Categories
       </Heading>
       <HStack overflowX="scroll" w="100%">

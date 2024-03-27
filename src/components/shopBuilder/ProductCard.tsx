@@ -35,6 +35,7 @@ export const VerticalProductCard = (props: ProductCardProps) => {
       borderWidth={variant === "modern" ? "none" : "1px"}
       borderColor="black"
       pos="relative"
+      bg="white"
     >
       <Image
         src={image}
@@ -58,10 +59,10 @@ export const VerticalProductCard = (props: ProductCardProps) => {
             </Text>
           )}
         </Stack>
-        <Heading fontSize="sm" fontWeight="normal" pr={8}>
+        <Heading fontSize="sm" fontWeight="normal" pr={8} color="shop.content">
           {title}
         </Heading>
-        <Text fontSize="xs" color="brand.description" lineHeight={1.2} pr={8}>
+        <Text fontSize="xs" color="shop.border" lineHeight={1.2} pr={8}>
           {description}
         </Text>
         {(discountedPrice || popularRank) && (

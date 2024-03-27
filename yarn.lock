@@ -1610,7 +1610,7 @@
     file-type "^16.5.4"
     form-data "^4.0.0"
 
-"@line/liff@2.23.2":
+"@line/liff@^2.23.2":
   version "2.23.2"
   resolved "https://registry.yarnpkg.com/@line/liff/-/liff-2.23.2.tgz#475abb2847dedd1b6c0ceaee129e03175598059e"
   integrity sha512-Xu4YRJlOUiQIkja3upj0enU/r7w3a8MA0XYLwlSVSanVMeRwt4GwUVldP2C4vd75DzOnvqEgCL/OqlSMofdYtg==

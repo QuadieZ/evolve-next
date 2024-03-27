@@ -16,7 +16,7 @@ export const LAYOUT_TEMPLATE: Record<ShopLayout, Component[]> = {
     {
       name: "ImageBanner",
       props: {
-        src: "https://source.unsplash.com/random",
+        src: "https://picsum.photos/300/500",
       },
     },
     {
@@ -25,15 +25,15 @@ export const LAYOUT_TEMPLATE: Record<ShopLayout, Component[]> = {
         categories: [
           {
             title: "Clothing",
-            src: "https://source.unsplash.com/random",
+            src: "https://picsum.photos/300/500",
           },
           {
             title: "Shoes",
-            src: "https://source.unsplash.com/random",
+            src: "https://picsum.photos/300/500",
           },
           {
             title: "Accessories",
-            src: "https://source.unsplash.com/random",
+            src: "https://picsum.photos/300/500",
           },
         ],
       },
@@ -49,7 +49,7 @@ export const LAYOUT_TEMPLATE: Record<ShopLayout, Component[]> = {
     {
       name: "ImageBanner",
       props: {
-        src: "https://source.unsplash.com/random",
+        src: "https://picsum.photos/300/500",
       },
     },
     {
@@ -73,15 +73,15 @@ export const LAYOUT_TEMPLATE: Record<ShopLayout, Component[]> = {
         categories: [
           {
             title: "Clothing",
-            src: "https://source.unsplash.com/random",
+            src: "https://picsum.photos/300/500",
           },
           {
             title: "Shoes",
-            src: "https://source.unsplash.com/random",
+            src: "https://picsum.photos/300/500",
           },
           {
             title: "Accessories",
-            src: "https://source.unsplash.com/random",
+            src: "https://picsum.photos/300/500",
           },
         ],
       },
@@ -107,15 +107,15 @@ export const LAYOUT_TEMPLATE: Record<ShopLayout, Component[]> = {
         categories: [
           {
             title: "Clothing",
-            src: "https://source.unsplash.com/random",
+            src: "https://picsum.photos/300/500",
           },
           {
             title: "Shoes",
-            src: "https://source.unsplash.com/random",
+            src: "https://picsum.photos/300/500",
           },
           {
             title: "Accessories",
-            src: "https://source.unsplash.com/random",
+            src: "https://picsum.photos/300/500",
           },
         ],
         variant: "clear",

@@ -1,6 +1,7 @@
 "use client";
 
 import { EvolveSpinner } from "@/components";
+import { LAYOUT_TEMPLATE } from "@/constant/layout";
 import { useShopStore } from "@/state";
 import { ShopDetailData } from "@/types";
 import { useRouter } from "next/navigation";
@@ -24,6 +25,20 @@ const mockShopDetailData: ShopDetailData[] = [
     shopRating: 3.5,
     hasOnboarded: true,
     ownerId: "1",
+    shopStyle: {
+      colors: {
+        primaryColor: "#D9828C",
+        borderColor: "#D9828C",
+        contrastColor: "#ffffff",
+        textColor: "#000000",
+        backgroundColor: "#FFEFF1",
+        secondaryBackgroundColor: "#D3D3D3",
+      },
+      logo: null,
+      shopLayout: "MINIMAL",
+      shopProductCardLayout: "full",
+      components: LAYOUT_TEMPLATE.CLEAR,
+    },
   },
 ];
 

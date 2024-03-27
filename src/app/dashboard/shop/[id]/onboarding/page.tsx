@@ -1,24 +1,29 @@
 "use client";
 
+import { EvolveDashboardHeader, ShopName } from "@/components";
 import {
   EvolveImageRadio,
   EvolveImageRadioItem,
 } from "@/components/EvolveImageRadio";
+import { LAYOUT_TEMPLATE } from "@/constant/layout";
 import { useShopStore } from "@/state";
 import { ShopLayout, ShopProductCardLayout } from "@/types";
-import { AttachmentIcon } from "@chakra-ui/icons";
+import { AttachmentIcon, InfoIcon } from "@chakra-ui/icons";
 import {
   Button,
   Center,
   Flex,
   HStack,
   Heading,
+  Image,
   Input,
   Stack,
   Text,
+  Tooltip,
 } from "@chakra-ui/react";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
+import { ColorPicker as ColorPickerComponent } from "@/components/onboard";
 
 const layoutOptions: EvolveImageRadioItem[] = [
   {
@@ -42,63 +47,121 @@ const productCardOptions: EvolveImageRadioItem[] = [
   {
     imageSource: "/productCardPreview/full.png",
     label: "Full",
-    value: "FULL",
+    value: "full",
   },
   {
     imageSource: "/productCardPreview/compact.png",
     label: "Compact",
-    value: "COMPACT",
+    value: "compact",
   },
 ];
 
 const ColorPicker = ({
   primaryColor,
   setPrimaryColor,
-  secondaryColor,
-  setSecondaryColor,
+  borderColor,
+  setBorderColor,
+  contrastColor,
+  setContrastColor,
+  textColor,
+  setTextColor,
+  backgroundColor,
+  setBackgroundColor,
+  secondaryBackgroundColor,
+  setSecondaryBackgroundColor,
 }: {
   primaryColor: string;
   setPrimaryColor: (color: string) => void;
-  secondaryColor: string;
-  setSecondaryColor: (color: string) => void;
+  borderColor: string;
+  setBorderColor: (color: string) => void;
+  contrastColor: string;
+  setContrastColor: (color: string) => void;
+  textColor: string;
+  setTextColor: (color: string) => void;
+  backgroundColor: string;
+  setBackgroundColor: (color: string) => void;
+  secondaryBackgroundColor: string;
+  setSecondaryBackgroundColor: (color: string) => void;
 }) => {
-  function handlePrimaryColorChange(
-    event: React.ChangeEvent<HTMLInputElement>
-  ) {
-    event.preventDefault();
-    setPrimaryColor(event.target.value);
-  }
-
-  function handleSecondaryColorChange(
-    event: React.ChangeEvent<HTMLInputElement>
-  ) {
-    event.preventDefault();
-    setSecondaryColor(event.target.value);
-  }
-
   return (
-    <Stack w="100%" align="center" gap={8}>
+    <Stack
+      w="100%"
+      align="flex-start"
+      gap={8}
+      bg="gray.50"
+      border="1px solid"
+      borderColor="border.item"
+      p={8}
+      borderRadius="lg"
+      flex={1}
+    >
       <Heading as="h2" fontSize="xl">
-        Select storefront colors
+        Storefront Theme
       </Heading>
-      <Stack flexDir="row" w="60%" gap={20}>
-        <Stack flex={1}>
-          <Text as="label">Primary color</Text>
-          <Input
-            type="color"
-            value={primaryColor}
-            onChange={handlePrimaryColorChange}
+      <HStack w="100%" gap={12}>
+        <Stack w="60%" gap={4}>
+          <HStack>
+            <ColorPickerComponent
+              label="Primary Color"
+              tooltipText="Main color of your brand; used in buttons, active items, highlights"
+              value={primaryColor}
+              onChange={setPrimaryColor}
+            />
+            <ColorPickerComponent
+              label="Border Color"
+              tooltipText="Will also be used as description text"
+              value={borderColor}
+              onChange={setBorderColor}
+            />
+          </HStack>
+          <HStack>
+            <ColorPickerComponent
+              label="Contrast Color"
+              //tooltipText="Main color of your brand; used in buttons, active items, highlights"
+              value={contrastColor}
+              onChange={setContrastColor}
+            />
+            <ColorPickerComponent
+              label="Text Color"
+              //tooltipText="Main color of your brand; used in buttons, active items, highlights"
+              value={textColor}
+              onChange={setTextColor}
+            />
+          </HStack>
+          <HStack>
+            <ColorPickerComponent
+              label="Background Color"
+              tooltipText="Color of the background of your storefront"
+              value={backgroundColor}
+              onChange={setBackgroundColor}
+            />
+            <ColorPickerComponent
+              label="Secondary Background Color"
+              tooltipText="Used in as background for inactive items"
+              value={secondaryBackgroundColor}
+              onChange={setSecondaryBackgroundColor}
+            />
+          </HStack>
+        </Stack>
+        <Stack
+          bg={backgroundColor}
+          flex={1}
+          p={8}
+          border="1px solid"
+          borderColor="gray.300"
+          borderRadius="md"
+        >
+          <ShopName
+            name="Shop Name"
+            description="Be the real you"
+            headerColor={textColor}
+            primaryButtonBgColor={primaryColor}
+            primaryButtonColor={contrastColor}
+            secondaryButtonColor={textColor}
+            secondaryButtonOutlineColor={borderColor}
           />
         </Stack>
-        <Stack flex={1}>
-          <Text as="label">Secondary color</Text>
-          <Input
-            type="color"
-            value={secondaryColor}
-            onChange={handleSecondaryColorChange}
-          />
-        </Stack>
-      </Stack>
+      </HStack>
     </Stack>
   );
 };
@@ -123,30 +186,68 @@ const UploadLogo = ({
   //TODO: AI generation of logo
 
   return (
-    <Stack w="100%" align="center" gap={8}>
-      <Heading as="h2" fontSize="xl">
-        Upload your storefront logo
-      </Heading>
+    <Stack
+      w="100%"
+      align="flex-start"
+      gap={4}
+      bg="gray.50"
+      border="1px solid"
+      borderColor="border.item"
+      p={8}
+      borderRadius="lg"
+      flex={1}
+    >
+      <Stack>
+        <Heading as="h2" fontSize="xl">
+          Upload your storefront logo
+        </Heading>
+        <Text color="brand.description">
+          We recommend using a square size logo
+        </Text>
+      </Stack>
       <Stack>
         <HStack
           as="label"
-          htmlFor="logo"
+          htmlFor={!logo ? "logo" : ""}
           align="center"
+          justify="center"
           border="1px dashed"
           p={8}
           borderColor="#B3B3B3"
           borderRadius="md"
-          cursor="pointer"
+          cursor={!logo ? "pointer" : ""}
+          h="250px"
+          w="250px"
         >
           {!logo ? (
-            <>
-              <AttachmentIcon />
-              <Text>Click to upload</Text>
-            </>
+            <Stack gap={0}>
+              <HStack justify="center">
+                <AttachmentIcon />
+                <Text>Click to upload</Text>
+              </HStack>
+              <Text color="brand.description" fontSize="sm">
+                .png or .jpg is accepted
+              </Text>
+            </Stack>
           ) : (
-            <Text>{logo.name}</Text>
+            <Image
+              src={URL.createObjectURL(logo)}
+              alt="shopLogo"
+              h="100%"
+              w="100%"
+            />
           )}
         </HStack>
+        {logo && (
+          <Text
+            as="label"
+            htmlFor="logo"
+            color="brand.primary"
+            cursor="pointer"
+          >
+            Not happy? Upload again
+          </Text>
+        )}
         <Input
           type="file"
           accept="image/png, image/jpeg, image/jpg"
@@ -171,7 +272,17 @@ const ChooseLayout = ({
   }
 
   return (
-    <Stack w="100%" align="center" gap={8}>
+    <Stack
+      w="100%"
+      align="center"
+      gap={8}
+      bg="gray.50"
+      border="1px solid"
+      borderColor="border.item"
+      p={8}
+      borderRadius="lg"
+      flex={1}
+    >
       <Heading as="h2" fontSize="xl">
         Choose your storefront layout
       </Heading>
@@ -198,7 +309,17 @@ const ChooseProductCardStyle = ({
     setProductCardStyle(value as ShopProductCardLayout);
   }
   return (
-    <Stack w="100%" align="center" gap={8}>
+    <Stack
+      w="100%"
+      align="center"
+      gap={8}
+      bg="gray.50"
+      border="1px solid"
+      borderColor="border.item"
+      p={8}
+      borderRadius="lg"
+      flex={1}
+    >
       <Heading as="h2" fontSize="xl">
         Choose the card style for your product cards
       </Heading>
@@ -217,6 +338,7 @@ const ChooseProductCardStyle = ({
 export default function Page() {
   const currentShop = useShopStore((state) => state.currentShop);
   const setDraftStyle = useShopStore((state) => state.setDraftStyle);
+  const setShopStyle = useShopStore((state) => state.setShopStyle);
   const router = useRouter();
 
   useEffect(() => {
@@ -228,20 +350,35 @@ export default function Page() {
 
   const name = currentShop?.shopName;
   const [currentPage, setCurrentPage] = useState(0);
-  const [primaryColor, setPrimaryColor] = useState("#000000");
-  const [secondaryColor, setSecondaryColor] = useState("#000000");
+
+  const [primaryColor, setPrimaryColor] = useState("#00C700");
+  const [borderColor, setBorderColor] = useState("#E6E6E6");
+  const [contrastColor, setContrastColor] = useState("#FFFFFF");
+  const [textColor, setTextColor] = useState("#000000");
+  const [backgroundColor, setBackgroundColor] = useState("#FFFFFF");
+  const [secondaryBackgroundColor, setSecondaryBackgroundColor] =
+    useState("#E6E6E6");
+
   const [logo, setLogo] = useState<File | null>(null);
   const [layoutStyle, setLayoutStyle] = useState<ShopLayout>("MINIMAL");
   const [productCardStyle, setProductCardStyle] =
-    useState<ShopProductCardLayout>("FULL");
+    useState<ShopProductCardLayout>("full");
 
   const componentsPageMap: Record<number, React.ReactNode> = {
     0: (
       <ColorPicker
         primaryColor={primaryColor}
         setPrimaryColor={setPrimaryColor}
-        secondaryColor={secondaryColor}
-        setSecondaryColor={setSecondaryColor}
+        borderColor={borderColor}
+        setBorderColor={setBorderColor}
+        contrastColor={contrastColor}
+        setContrastColor={setContrastColor}
+        textColor={textColor}
+        setTextColor={setTextColor}
+        backgroundColor={backgroundColor}
+        setBackgroundColor={setBackgroundColor}
+        secondaryBackgroundColor={secondaryBackgroundColor}
+        setSecondaryBackgroundColor={setSecondaryBackgroundColor}
       />
     ),
     1: <UploadLogo logo={logo} setLogo={setLogo} />,
@@ -268,28 +405,60 @@ export default function Page() {
   }
 
   function handleConfirmClick() {
-    setDraftStyle({
+    const layoutFromTemplate = LAYOUT_TEMPLATE[layoutStyle];
+    const shopTitleIndex = layoutFromTemplate.findIndex(
+      (c) => c.name === "ShopTitle"
+    );
+    const productCardIndex = layoutFromTemplate.findIndex(
+      (c) => c.name === "ProductsList" && !c.props.isFeatured
+    );
+    const productCategoryIndex = layoutFromTemplate.findIndex(
+      (c) => c.name === "ProductCategories"
+    );
+    (layoutFromTemplate[shopTitleIndex] as any).props = {
+      ...(layoutFromTemplate[shopTitleIndex] as any).props,
+      name,
+      logo: logo ? URL.createObjectURL(logo) : null,
+    };
+    (layoutFromTemplate[productCardIndex] as any).props = {
+      ...(layoutFromTemplate[productCardIndex] as any).props,
+      variant: productCardStyle,
+      productCardVariant: layoutStyle === "CLEAR" ? "clear" : "modern",
+    };
+    (layoutFromTemplate[productCategoryIndex] as any).props = {
+      ...(layoutFromTemplate[productCategoryIndex] as any).props,
+      variant: layoutStyle === "CLEAR" ? "clear" : "fill",
+    };
+
+    const shopStyle = {
       colors: {
         primaryColor,
-        secondaryColor,
+        borderColor,
+        contrastColor,
+        textColor,
+        backgroundColor,
+        secondaryBackgroundColor,
       },
       logo,
       shopLayout: layoutStyle,
       shopProductCardLayout: productCardStyle,
-    });
+      components: LAYOUT_TEMPLATE[layoutStyle],
+    };
+    console.log(shopStyle);
+    setShopStyle(shopStyle);
     router.replace(
       `/dashboard/shop/${currentShop?.shopId}/editor?isDraft=true`
     );
   }
 
   return (
-    <Stack align="center" w="100%" suppressHydrationWarning gap={12}>
-      <Center flexDir="column">
-        <Heading suppressHydrationWarning>Welcome to {name}</Heading>
-        <Text>{`Let's start customizing your storefront! All settings can be changed later`}</Text>
-      </Center>
+    <Stack w="100%" suppressHydrationWarning gap={4} h="100%">
+      <EvolveDashboardHeader
+        header={`Welcome to ${name}`}
+        desciption="Let's start customizing your storefront! All settings can be changed later"
+      />
       {componentsPageMap[currentPage]}
-      <HStack>
+      <HStack w="100%" justify="flex-end">
         {currentPage > firstPage && (
           <Button onClick={handlePreviousPageClick} variant="outline">
             Go back

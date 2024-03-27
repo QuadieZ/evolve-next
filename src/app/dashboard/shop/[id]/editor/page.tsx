@@ -1,25 +1,16 @@
 "use client";
 
-import {
-  Divider,
-  HorizontalProductCard,
-  ImageBanner,
-  ScreenContainer,
-  ShopName,
-  VerticalProductCard,
-} from "@/components";
+import { ScreenContainer } from "@/components";
 import { BuilderComponentProvider } from "@/components/shopBuilder/BuilderComponentProvider";
-import { CategorySelector } from "@/components/shopBuilder/CategorySelector";
-import { ComponentRenderer } from "@/components/shopBuilder/ComponentRenderer";
-import { ProductsList } from "@/components/shopBuilder/ProductsList";
 import { LAYOUT_TEMPLATE } from "@/constant/layout";
-import { allComponents, mockComponents } from "@/mockData";
+import { allComponents } from "@/mockData";
 import { useShopStore } from "@/state";
+import { theme } from "@/style/theme";
 import { Component, ComponentMap } from "@/types";
 import { reorderComponents } from "@/utils";
-import { EditIcon } from "@chakra-ui/icons";
 import {
   Box,
+  ChakraProvider,
   Collapse,
   Flex,
   HStack,
@@ -48,25 +39,38 @@ function reorder(list: Component[], startIndex: number, endIndex: number) {
 }
 
 export default function Page() {
-  const searchParams = useSearchParams();
-  const isDraft = searchParams.get("isDraft") === "true";
+  //const searchParams = useSearchParams();
+  //const isDraft = searchParams.get("isDraft") === "true";
   const draftStyle = useShopStore((state) => state.draftStyle);
   const setDraftStyle = useShopStore((state) => state.setDraftStyle);
   const currentShopStyle = useShopStore(
     (state) => state.currentShop?.shopStyle
   );
+  const [shopTheme, setShopTheme] = useState({});
 
-  const [shopStyle, setShopStyle] = useState(
-    isDraft ? draftStyle : currentShopStyle
-  );
-  //const [components, setComponents] = useState(mockComponents);
+  console.log(currentShopStyle);
 
   const [componentMap, setComponentMap] = useState<ComponentMap>({
-    SCREEN_DROPPABLE: isDraft
-      ? LAYOUT_TEMPLATE[shopStyle?.shopLayout || "MINIMAL"]
-      : currentShopStyle?.components!,
     ALL_COMPONENTS: allComponents,
   });
+
+  // init style
+  useEffect(() => {
+    if (!currentShopStyle) return;
+    setComponentMap((prev) => ({
+      ALL_COMPONENTS: allComponents,
+      SCREEN_DROPPABLE: currentShopStyle?.components ?? [],
+    }));
+    console.log("init style", currentShopStyle);
+    setShopTheme({
+      primary: currentShopStyle?.colors.primaryColor,
+      contrast: currentShopStyle?.colors.contrastColor,
+      border: currentShopStyle?.colors.borderColor,
+      content: currentShopStyle?.colors.textColor,
+      background: currentShopStyle?.colors.backgroundColor,
+      secondaryBackground: currentShopStyle?.colors.secondaryBackgroundColor,
+    });
+  }, [currentShopStyle]);
 
   useEffect(() => {
     setDraftStyle({
@@ -95,73 +99,84 @@ export default function Page() {
   }
 
   return (
-    <DragDropContext
-      onDragEnd={onDragEnd}
-      //onDragStart={(res) => console.log("start", res)}
+    <ChakraProvider
+      theme={{
+        ...theme,
+        colors: {
+          ...theme.colors,
+          shop: shopTheme,
+        },
+      }}
     >
-      <Stack
-        w="100%"
-        h="100%"
-        pos="absolute"
-        top={0}
-        left={0}
-        justify="center"
-        flexDir="row"
+      <DragDropContext
+        onDragEnd={onDragEnd}
+        //onDragStart={(res) => console.log("start", res)}
       >
         <Stack
-          w="70%"
+          w="100%"
           h="100%"
-          overflowY="scroll"
-          align="center"
-          pos="relative"
+          pos="absolute"
+          top={0}
+          left={0}
+          justify="center"
+          flexDir="row"
         >
-          <Droppable droppableId="SCREEN_DROPPABLE" type="SCREEN">
-            {(provided, snapshot) => (
-              <ScreenContainer
+          <Stack
+            w="70%"
+            h="100%"
+            overflowY="scroll"
+            align="center"
+            pos="relative"
+          >
+            <Droppable droppableId="SCREEN_DROPPABLE" type="SCREEN">
+              {(provided, snapshot) => (
+                <ScreenContainer
+                  {...provided.droppableProps}
+                  containerRef={provided.innerRef}
+                  bg="shop.background"
+                >
+                  {componentMap["SCREEN_DROPPABLE"]?.map((component, index) => (
+                    <BuilderComponentProvider
+                      key={`screen_${index}`}
+                      draggableId={`screen_${index}`}
+                      index={index}
+                      onDuplicate={onDuplicateComponent}
+                      onDelete={onDeleteComponent}
+                      {...component}
+                    />
+                  ))}
+                </ScreenContainer>
+              )}
+            </Droppable>
+          </Stack>
+          <Droppable droppableId="ALL_COMPONENTS" type="SCREEN" isDropDisabled>
+            {(provided) => (
+              <Stack
+                w="30%"
+                h="100%"
+                overflowY="scroll"
+                borderLeft="1px"
+                borderColor="border.item"
+                ref={provided.innerRef}
+                divider={<StackDivider borderColor="border.item" />}
+                gap={4}
+                p={8}
                 {...provided.droppableProps}
-                containerRef={provided.innerRef}
               >
-                {componentMap["SCREEN_DROPPABLE"].map((component, index) => (
+                {componentMap["ALL_COMPONENTS"].map((component, index) => (
                   <BuilderComponentProvider
-                    key={`screen_${index}`}
-                    draggableId={`screen_${index}`}
-                    index={index}
-                    onDuplicate={onDuplicateComponent}
-                    onDelete={onDeleteComponent}
                     {...component}
+                    key={`allcomp_${index}`}
+                    index={index}
+                    draggableId={`allcomp_${index}`}
+                    renderClone
                   />
                 ))}
-              </ScreenContainer>
+              </Stack>
             )}
           </Droppable>
         </Stack>
-        <Droppable droppableId="ALL_COMPONENTS" type="SCREEN" isDropDisabled>
-          {(provided) => (
-            <Stack
-              w="30%"
-              h="100%"
-              overflowY="scroll"
-              borderLeft="1px"
-              borderColor="border.item"
-              ref={provided.innerRef}
-              divider={<StackDivider borderColor="border.item" />}
-              gap={4}
-              p={8}
-              {...provided.droppableProps}
-            >
-              {allComponents.map((component, index) => (
-                <BuilderComponentProvider
-                  {...component}
-                  key={component.name}
-                  index={index}
-                  draggableId={`allcomp_${index}`}
-                  renderClone
-                />
-              ))}
-            </Stack>
-          )}
-        </Droppable>
-      </Stack>
-    </DragDropContext>
+      </DragDropContext>
+    </ChakraProvider>
   );
 }

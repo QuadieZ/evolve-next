@@ -3,7 +3,7 @@ import { Button, ButtonProps } from "@chakra-ui/react";
 export type EvolveButtonProps = ButtonProps;
 
 const filledButtonStyle = {
-  background: "brand.primary",
+  background: "shop.primary",
   color: "brand.contrast",
   _hover: {
     background: "brand.hoverPrimary",

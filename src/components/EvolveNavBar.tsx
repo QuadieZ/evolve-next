@@ -35,6 +35,7 @@ export const EvolveNavBar = () => {
   const userProfile = useUserStore((state) => state.userProfile);
   console.log(userProfile?.pictureUrl);
   const draftStyle = useShopStore((state) => state.draftStyle);
+  const shopStyle = useShopStore((state) => state.currentShop?.shopStyle);
   const setShopStyle = useShopStore((state) => state.setShopStyle);
 
   const showDashboardMenu =
@@ -50,7 +51,10 @@ export const EvolveNavBar = () => {
 
   function handlePublish() {
     // save to db
-    setShopStyle(draftStyle!);
+    setShopStyle({
+      ...shopStyle!,
+      components: draftStyle!.components,
+    });
     router.push(`/dashboard/shop/${shopId}`);
   }
 

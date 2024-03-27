@@ -34,7 +34,7 @@ export type ShopDetailData = {
 }
 
 export type ShopLayout = 'MINIMAL' | 'CREATIVE' | 'CLEAR'
-export type ShopProductCardLayout = 'FULL' | 'COMPACT'
+export type ShopProductCardLayout = 'full' | 'compact'
 export type ContainerDataProps = Omit<ContainerProps, 'children'> & {
     children: Component[]
 }
@@ -42,11 +42,16 @@ export type ContainerDataProps = Omit<ContainerProps, 'children'> & {
 export type ShopStyle = {
     colors: {
         primaryColor: string
-        secondaryColor: string
+        borderColor: string
+        contrastColor: string
+        textColor: string
+        backgroundColor: string
+        secondaryBackgroundColor: string
     },
     logo: File | null,
     shopLayout: ShopLayout
     shopProductCardLayout: ShopProductCardLayout
+    components: Component[]
 }
 
 export type Component = {

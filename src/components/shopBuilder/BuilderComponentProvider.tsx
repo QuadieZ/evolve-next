@@ -76,6 +76,7 @@ export const BuilderComponentProvider = (
     );
   }
 
+  console.log(component);
   function handleContextMenu(e: React.MouseEvent) {
     if (draggableId.includes("screen")) {
       show({

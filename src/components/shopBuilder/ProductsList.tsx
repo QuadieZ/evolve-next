@@ -25,7 +25,7 @@ export const ProductsList = (props: ProductsListProps) => {
 
   return (
     <Stack flexDir="column" w="100%" pos="relative">
-      <Heading fontWeight="medium" fontSize="lg">
+      <Heading fontWeight="medium" fontSize="lg" color="shop.content">
         {isFeatured ? "Featured Products" : "Our Products"}
       </Heading>
       <Stack

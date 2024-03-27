@@ -8,6 +8,7 @@ export type ImageBannerProps = {
 export const ImageBanner = (props: ImageBannerProps) => {
   const { src, type = "squared", position = "relative" } = props;
 
+  console.log(src);
   return (
     <Image
       src={src}
@@ -19,7 +20,7 @@ export const ImageBanner = (props: ImageBannerProps) => {
       position={position}
       top={0}
       right={0}
-      zIndex={-1}
+      zIndex={10}
     />
   );
 };
