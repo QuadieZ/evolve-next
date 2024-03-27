@@ -79,13 +79,13 @@ export default function Page() {
         </Center>
       ) : (
         <Stack
-          w="100%"
+          w="100vw"
           h="100vh"
           pos="absolute"
           right={0}
           top={0}
           p={8}
-          overflow="scroll"
+          overflowY="scroll"
         >
           {components.map((c) => (
             <ComponentRenderer key={c.name} {...c} />
