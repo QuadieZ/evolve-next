@@ -33,6 +33,7 @@ export const ProductsList = (props: ProductsListProps) => {
         flexWrap={isFeatured ? "nowrap" : "wrap"}
         justify="space-between"
         spacing={3}
+        overflowX={isFeatured ? "scroll" : "hidden"}
       >
         {products.map((product) => {
           if (variant === "full") {
