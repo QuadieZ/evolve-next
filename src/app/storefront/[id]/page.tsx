@@ -84,7 +84,8 @@ export default function Page() {
           pos="absolute"
           right={0}
           top={0}
-          p={8}
+          px={8}
+          py={12}
           overflowY="scroll"
         >
           {components.map((c) => (
