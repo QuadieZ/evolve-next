@@ -24,7 +24,7 @@ export const CategorySelector = (props: CategorySelectorProps) => {
       };
     }
     return {
-      bgColor: isSelected ? "shop.primary" : "shop.border",
+      bgColor: isSelected ? "shop.primary" : "shop.secondaryBackground",
       color: isSelected ? "shop.contrast" : "shop.text",
       borderColor: "transparent",
     };
