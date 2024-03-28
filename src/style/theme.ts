@@ -5,6 +5,13 @@ export const theme = extendTheme({
         initialColorMode: 'light',
         useSystemColorMode: false
     } as ThemeConfig,
+    styles: {
+        global: {
+            'html, body': {
+                background: 'brand.background.primary',
+            }
+        }
+    },
     colors: {
         brand: {
             primary: "#00C700",

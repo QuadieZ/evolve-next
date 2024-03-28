@@ -26,6 +26,8 @@ import React, { useEffect, useState } from "react";
 import { ColorPicker as ColorPickerComponent } from "@/components/onboard";
 import { EvolveFileUpload } from "@/components/EvolveFileUpload";
 import { ColorPicker } from "@/components/ColorPicker";
+import { v4 } from "uuid";
+import supabase from "@/utils/supabase";
 
 const layoutOptions: EvolveImageRadioItem[] = [
   {
@@ -245,7 +247,7 @@ export default function Page() {
     setCurrentPage((prev) => prev + 1);
   }
 
-  function handleConfirmClick() {
+  async function handleConfirmClick() {
     const layoutFromTemplate = LAYOUT_TEMPLATE[layoutStyle];
     const shopTitleIndex = layoutFromTemplate.findIndex(
       (c) => c.name === "ShopTitle"
@@ -286,6 +288,37 @@ export default function Page() {
       components: LAYOUT_TEMPLATE[layoutStyle],
     };
     console.log(shopStyle);
+
+    const styleId = v4();
+    const { error } = await supabase!
+      .from("shopStyle")
+      .insert({
+        shopStyleId: styleId,
+        primaryColor,
+        borderColor,
+        contrastColor,
+        textColor,
+        backgroundColor,
+        secondaryBackgroundColor,
+        logo: logo?.name,
+        shopLayout: layoutStyle,
+        shopProductCardLayout: productCardStyle,
+        components: LAYOUT_TEMPLATE[layoutStyle]?.map((c) => JSON.stringify(c)),
+      })
+      .single();
+    const { error: shopError } = await supabase!
+      .from("shop")
+      .update({
+        hasOnboarded: true,
+        shopStyleId: styleId,
+      })
+      .eq("shopId", currentShop?.shopId);
+
+    if (error || shopError) {
+      console.error("Error saving shop style:", error?.message);
+      return;
+    }
+
     setShopStyle(shopStyle);
     router.replace(
       `/dashboard/shop/${currentShop?.shopId}/editor?isDraft=true`

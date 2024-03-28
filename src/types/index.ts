@@ -31,6 +31,7 @@ export type ShopDetailData = {
     shopRating?: number
     hasOnboarded?: boolean
     ownerId: string
+    shopStyleId?: string
     shopStyle?: ShopStyle
 }
 
