@@ -25,11 +25,13 @@ const mockShops: ShopPreviewData[] = [
     shopPictureUrl: "https://via.placeholder.com/150",
     shopDescription: "This is a shop description",
     ownerId: "1",
+    hasOnboarded:true
   },
   {
     shopId: "2",
     shopName: "Shop 2",
     ownerId: "1",
+    hasOnboarded:true
   },
 ];
 
