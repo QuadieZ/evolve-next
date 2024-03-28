@@ -12,7 +12,9 @@ export async function GET(req: any, res: any) {
 
         })
         if (data.ok) {
+            console.log(data)
             const products = await data.json()
+            console.log(products)
             return NextResponse.json(
                 {
                     products
