@@ -6,6 +6,7 @@ import {
   productMainCategoryOptions,
   productSubCategoryOptions,
 } from "@/constant/productCategoryOptions";
+import supabase from "@/utils/supabase";
 import { AddIcon, CheckCircleIcon, DeleteIcon } from "@chakra-ui/icons";
 import {
   Button,
@@ -56,6 +57,18 @@ const AddProductForm = ({
   const [weight, setWeight] = useState<number>(0);
 
   useEffect(() => {
+    async function getSupabaseImage() {
+      const { data, error } = await supabase!.storage
+        .from("productImage")
+        .upload(
+          `public/products/${name}.${
+            image?.type === "image/jpg" ? "jpg" : "png"
+          }`,
+          image!
+        );
+
+      return (data as any).fullPath;
+    }
     if (
       !name ||
       !category ||
@@ -67,23 +80,30 @@ const AddProductForm = ({
     )
       return;
 
-    const payload: AddProductPayload = {
-      name,
-      categoryId: category + subCategory,
-      image: [URL.createObjectURL(image)],
-      code,
-      variant: {
-        price,
-        inventory,
-        weight,
-      },
-    };
+    getSupabaseImage().then((fullPath) => {
+      console.log(fullPath);
+      const payload: AddProductPayload = {
+        name,
+        categoryId: category + subCategory,
+        image: [
+          process.env.NEXT_PUBLIC_SUPABASE_URL +
+            `/storage/v1/object/public/${fullPath}`,
+        ],
+        code,
+        variant: {
+          price,
+          inventory,
+          weight,
+        },
+      };
 
-    setProducts((prev) => {
-      const newProducts = [...prev];
-      newProducts[index] = payload;
-      return newProducts;
+      setProducts((prev) => {
+        const newProducts = [...prev];
+        newProducts[index] = payload;
+        return newProducts;
+      });
     });
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [name, category, subCategory, code, image, price, inventory, weight]);
 

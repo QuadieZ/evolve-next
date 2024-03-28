@@ -15,6 +15,7 @@
     "@emotion/react": "^11.11.3",
     "@emotion/styled": "^11.11.0",
     "@line/liff": "^2.23.2",
+    "@supabase/supabase-js": "^2.41.1",
     "@types/react-beautiful-dnd": "^13.1.8",
     "@types/uuid": "^9.0.8",
     "@uiw/react-color-chrome": "^2.1.0",

@@ -133,6 +133,7 @@ export default function Page({ params }: { params: { id: string } }) {
           <DeleteIcon
             boxSize="18px"
             color="red"
+            cursor="pointer"
             onClick={() => deleteProduct(row.id)}
           />
         </HStack>

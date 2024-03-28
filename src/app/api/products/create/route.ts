@@ -1,3 +1,4 @@
+import supabase from "@/utils/supabase";
 import { NextRequest, NextResponse } from "next/server";
 
 type AddProductPayload = {
@@ -28,9 +29,7 @@ export async function POST(req: NextRequest, res: NextResponse) {
                 body: JSON.stringify({
                     name: product.name,
                     categoryId: product.categoryId,
-                    imageUrls: [
-                        "https://letsenhance.io/static/8f5e523ee6b2479e26ecc91b9c25261e/1015f/MainAfter.jpg"
-                    ],
+                    imageUrls: product.image,
                     code: product.code,
                     variants: [
                         {
