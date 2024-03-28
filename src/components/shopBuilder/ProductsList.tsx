@@ -1,5 +1,10 @@
+"use client";
+
 import { Heading, Stack } from "@chakra-ui/react";
 import { HorizontalProductCard, VerticalProductCard } from ".";
+import { useEffect, useState } from "react";
+import { useSearchParams } from "next/navigation";
+import { useRouter } from "next/router";
 
 export type ProductData = {
   id: string;
@@ -24,8 +29,37 @@ export const ProductsList = (props: ProductsListProps) => {
     isFeatured,
   } = props;
 
+  const [fetchProducts, setFetchProducts] = useState([]);
+
+  const navigation = useRouter();
+  const searchParams = useSearchParams();
+  useEffect(() => {
+    const shopIdFromLiff = searchParams.get("liff.state");
+    if (shopIdFromLiff) {
+      const id = shopIdFromLiff.split("F")[1];
+      navigation.push(`/storefront/${id}`);
+    }
+  }, []);
+  useEffect(() => {
+    async function fetchData() {
+      console.log(process.env.NEXT_PUBLIC_LINE_API_KEY);
+      const data = await (await fetch("/api/products")).json();
+      const products: ProductData[] = data.products.data.map((p) => ({
+        id: p.id,
+        title: p.name,
+        description: p.description,
+        image: p.imageUrls[0],
+        price: p.variants[0].price,
+      }));
+
+      setFetchProducts(products as any);
+    }
+
+    fetchData();
+  }, []);
+
   return (
-    <Stack flexDir="column" w="100%" pos="relative">
+    <Stack flexDir="column" w="100%" pos="relative" suppressHydrationWarning>
       <Heading fontWeight="medium" fontSize="lg" color="shop.content">
         {isFeatured ? "Featured Products" : "Our Products"}
       </Heading>
@@ -36,7 +70,7 @@ export const ProductsList = (props: ProductsListProps) => {
         spacing={3}
         overflowX={isFeatured ? "scroll" : "hidden"}
       >
-        {products.map((product) => {
+        {fetchProducts.map((product: any) => {
           if (variant === "full") {
             return (
               <HorizontalProductCard

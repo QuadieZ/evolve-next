@@ -1,5 +1,6 @@
 "use client";
-
+import { ShopDetailData } from "@/types";
+import { createClient } from "@supabase/supabase-js";
 import NextLink from "next/link";
 import { EvolveDashboardHeader, EvolveSpinner } from "@/components";
 import { useShopStore, useUserStore } from "@/state";
@@ -18,9 +19,10 @@ import {
   Tooltip,
 } from "@chakra-ui/react";
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
+import { use, useEffect, useState } from "react";
 import DataTable, { TableColumn } from "react-data-table-component";
 import { DragHandleIcon, EditIcon, SettingsIcon } from "@chakra-ui/icons";
+import supabase from "@/utils/supabase";
 
 const columns: TableColumn<ShopPreviewData>[] = [
   {
@@ -101,6 +103,7 @@ export default function Dashboard({ params }: { params: { code: string } }) {
   const setUserProfile = useUserStore((state: any) => state.setUserProfile);
   const clearCurrentShop = useShopStore((state: any) => state.clearCurrentShop);
 
+  const [shopData, setShopData] = useState<ShopPreviewData[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   useEffect(() => {
     clearCurrentShop();
@@ -155,10 +158,31 @@ export default function Dashboard({ params }: { params: { code: string } }) {
     if (sessionToken && !userProfile) {
       getUserProfile(sessionToken);
     }
-    setIsLoading(false);
+
+    async function getAllShops() {
+      const { data, error } = await supabase!.from("shop").select("*");
+      if (error) {
+        console.error("Error fetching data:", error.message);
+        return;
+      }
+
+      setShopData(
+        data.map((shop) => ({
+          shopId: shop.shopId,
+          shopName: shop.shopName,
+          shopDescription: shop.shopDescription,
+          ownerId: shop.ownerId,
+          hasOnboarded: shop.hasOnboarded,
+        }))
+      );
+      setIsLoading(false);
+    }
+
+    getAllShops();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [sessionToken]);
 
+  console.log(shopData);
   return (
     <Stack gap={8}>
       <EvolveDashboardHeader
@@ -174,7 +198,7 @@ export default function Dashboard({ params }: { params: { code: string } }) {
       />
       <DataTable
         columns={columns}
-        data={mockShops}
+        data={shopData}
         onRowClicked={(row, event) => console.log(row, event)}
         progressPending={isLoading}
         progressComponent={<EvolveSpinner />}

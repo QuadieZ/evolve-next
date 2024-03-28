@@ -23,10 +23,12 @@ import {
   MenuDivider,
   MenuItem,
   MenuList,
+  useToast,
 } from "@chakra-ui/react";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { EvolveButton } from "./EvolveButton";
+import supabase from "@/utils/supabase";
 
 export const EvolveNavBar = () => {
   const router = useRouter();
@@ -35,6 +37,7 @@ export const EvolveNavBar = () => {
   const userProfile = useUserStore((state) => state.userProfile);
   console.log(userProfile?.pictureUrl);
   const draftStyle = useShopStore((state) => state.draftStyle);
+  const currentShop = useShopStore((state) => state.currentShop);
   const shopStyle = useShopStore((state) => state.currentShop?.shopStyle);
   const setShopStyle = useShopStore((state) => state.setShopStyle);
 
@@ -44,18 +47,36 @@ export const EvolveNavBar = () => {
   const [username, setUsername] = useState<string>("");
   const [imageSrc, setImageSrc] = useState<string>("");
 
+  const toast = useToast();
   useEffect(() => {
     userProfile?.pictureUrl && setImageSrc(userProfile?.pictureUrl);
     userProfile?.display_name && setUsername(userProfile?.display_name);
   }, [userProfile?.pictureUrl, userProfile?.display_name]);
 
-  function handlePublish() {
+  async function handlePublish() {
     // save to db
     setShopStyle({
       ...shopStyle!,
       components: draftStyle!.components,
     });
-    router.push(`/dashboard/shop/${shopId}`);
+    const { error } = await supabase
+      ?.from("shopStyle")
+      .update({
+        components: draftStyle!.components.map((c) => JSON.stringify(c)),
+      })
+      .eq("shopStyleId", currentShop?.shopStyleId);
+
+    if (error) {
+      console.error("Error saving shop style:", error.message);
+      return;
+    }
+    toast({
+      title: "Published!",
+      description: "Your changes have been published",
+      status: "success",
+      duration: 3000,
+      isClosable: true,
+    });
   }
 
   return (
