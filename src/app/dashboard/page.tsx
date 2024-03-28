@@ -1,5 +1,6 @@
 "use client";
-
+import { ShopDetailData } from "@/types";
+import { createClient } from "@supabase/supabase-js";
 import NextLink from "next/link";
 import { EvolveDashboardHeader, EvolveSpinner } from "@/components";
 import { useShopStore, useUserStore } from "@/state";
@@ -22,6 +23,57 @@ import { useEffect, useState } from "react";
 import DataTable, { TableColumn } from "react-data-table-component";
 import { DragHandleIcon, EditIcon, SettingsIcon } from "@chakra-ui/icons";
 
+const columns: TableColumn<ShopPreviewData>[] = [
+  {
+    cell: (row) => (
+      <Image
+        src="/shopPlaceholder.jpeg"
+        alt={row.shopName}
+        borderRadius="lg"
+        w="auto"
+        objectFit={"cover"}
+        h="50px"
+      />
+    ),
+    width: "120px",
+    style: {
+      cursor: "pointer",
+    },
+  },
+  {
+    name: "Shop",
+    selector: (row) => row.shopName,
+    width: "200px",
+  },
+  {
+    name: "Description",
+    selector: (row) => row.shopDescription ?? "No description",
+  },
+  {
+    name: "Actions",
+    cell: (row) => (
+      <HStack spacing={4}>
+        <Tooltip label="Edit storefront">
+          <Link as={NextLink} href={`/dashboard/shop/${row.shopId}/editor`}>
+            <EditIcon />
+          </Link>
+        </Tooltip>
+        <Tooltip label="Manage Product">
+          <Link as={NextLink} href={`/dashboard/shop/${row.shopId}/products`}>
+            <DragHandleIcon />
+          </Link>
+        </Tooltip>
+        <Tooltip label="Settings">
+          <Link href={`/dashboard/shop/${row.shopId}/settings`} as={NextLink}>
+            <SettingsIcon />
+          </Link>
+        </Tooltip>
+      </HStack>
+    ),
+  },
+];
+
+
 const mockShops: ShopPreviewData[] = [
   {
     shopId: "1",
@@ -38,7 +90,7 @@ const mockShops: ShopPreviewData[] = [
   },
 ];
 
-export default function Dashboard({ params }: { params: { code: string } }) {
+export default function Dashboard({ params }: { params: { code: string,id:string } }) {
   const router = useRouter();
   const pathname = usePathname();
   const code = params.code;
@@ -57,6 +109,46 @@ export default function Dashboard({ params }: { params: { code: string } }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+const shopId = params.id;
+const currentShop = useShopStore((state) => state.currentShop);
+
+  useEffect(() => {
+    async function getShopData(shopId:string) {
+      const supabase = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!,process.env.NEXT_PUBLIC_SUPABASE_API_KEY!);
+      console.log(supabase, 'supabase')
+      const { data, error } = await supabase
+          .from('shop')
+          .select('*')
+    
+      if (error) {
+          console.error('Error fetching data:', error.message);
+          return;
+      }
+    
+      console.log('Shop data:', data);
+      return data
+    }
+    
+    const [setShopData, setIsLoading] = useState(true);
+ 
+
+
+    
+    
+
+    console.log('currentshop',currentShop)
+      if (!currentShop||(currentShop as ShopDetailData)?.shopId !== shopId) {
+        console.log("getting");
+        console.log("getting");
+        getShopData(shopId);
+      } else {
+        setIsLoading(false);
+      }
+    
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentShop]);
+  
   useEffect(() => {
     async function getSessionToken(code: string) {
       const sessionToken = await fetch(
@@ -123,7 +215,7 @@ export default function Dashboard({ params }: { params: { code: string } }) {
         desciption="Evolve your LINE Shopping storefronts"
       />
       <DataTable
-        columns={column}
+        columns={columns}
         data={mockShops}
         onRowClicked={(row, event) => console.log(row, event)}
         progressPending={isLoading}
