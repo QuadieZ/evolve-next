@@ -20,6 +20,7 @@ export type ShopPreviewData = {
     shopPictureUrl?: string
     shopDescription?: string
     ownerId: string
+    hasOnboarded: boolean
 }
 
 export type ShopDetailData = {

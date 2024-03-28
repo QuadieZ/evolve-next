@@ -24,6 +24,7 @@ import {
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { ColorPicker as ColorPickerComponent } from "@/components/onboard";
+import { EvolveFileUpload } from "@/components/EvolveFileUpload";
 
 const layoutOptions: EvolveImageRadioItem[] = [
   {
@@ -56,7 +57,7 @@ const productCardOptions: EvolveImageRadioItem[] = [
   },
 ];
 
-const ColorPicker = ({
+export const ColorPicker = ({
   primaryColor,
   setPrimaryColor,
   borderColor,
@@ -69,6 +70,7 @@ const ColorPicker = ({
   setBackgroundColor,
   secondaryBackgroundColor,
   setSecondaryBackgroundColor,
+  noBackground,
 }: {
   primaryColor: string;
   setPrimaryColor: (color: string) => void;
@@ -82,14 +84,15 @@ const ColorPicker = ({
   setBackgroundColor: (color: string) => void;
   secondaryBackgroundColor: string;
   setSecondaryBackgroundColor: (color: string) => void;
+  noBackground?: boolean;
 }) => {
   return (
     <Stack
       w="100%"
       align="flex-start"
       gap={8}
-      bg="gray.50"
-      border="1px solid"
+      bg={noBackground ? "none" : "gray.50"}
+      border={noBackground ? "none" : "1px solid"}
       borderColor="border.item"
       p={8}
       borderRadius="lg"
@@ -182,7 +185,6 @@ const UploadLogo = ({
     }
   }
 
-  //TODO: Preview Image
   //TODO: AI generation of logo
 
   return (
@@ -205,57 +207,7 @@ const UploadLogo = ({
           We recommend using a square size logo
         </Text>
       </Stack>
-      <Stack>
-        <HStack
-          as="label"
-          htmlFor={!logo ? "logo" : ""}
-          align="center"
-          justify="center"
-          border="1px dashed"
-          p={8}
-          borderColor="#B3B3B3"
-          borderRadius="md"
-          cursor={!logo ? "pointer" : ""}
-          h="250px"
-          w="250px"
-        >
-          {!logo ? (
-            <Stack gap={0}>
-              <HStack justify="center">
-                <AttachmentIcon />
-                <Text>Click to upload</Text>
-              </HStack>
-              <Text color="brand.description" fontSize="sm">
-                .png or .jpg is accepted
-              </Text>
-            </Stack>
-          ) : (
-            <Image
-              src={URL.createObjectURL(logo)}
-              alt="shopLogo"
-              h="100%"
-              w="100%"
-            />
-          )}
-        </HStack>
-        {logo && (
-          <Text
-            as="label"
-            htmlFor="logo"
-            color="brand.primary"
-            cursor="pointer"
-          >
-            Not happy? Upload again
-          </Text>
-        )}
-        <Input
-          type="file"
-          accept="image/png, image/jpeg, image/jpg"
-          id="logo"
-          hidden
-          onChange={handleLogoUpload}
-        />
-      </Stack>
+      <EvolveFileUpload file={logo} onFileChange={setLogo} id="logo" />
     </Stack>
   );
 };

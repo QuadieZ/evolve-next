@@ -1,7 +1,7 @@
 "use client";
 
 import NextLink from "next/link";
-import { EvolveDashboardHeader } from "@/components";
+import { EvolveDashboardHeader, EvolveSpinner } from "@/components";
 import { useShopStore, useUserStore } from "@/state";
 import { ShopPreviewData } from "@/types";
 import {
@@ -9,27 +9,89 @@ import {
   Card,
   CardBody,
   Flex,
+  HStack,
   Heading,
   Image,
   Link,
   Stack,
   Text,
+  Tooltip,
 } from "@chakra-ui/react";
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import DataTable, { TableColumn } from "react-data-table-component";
+import { DragHandleIcon, EditIcon, SettingsIcon } from "@chakra-ui/icons";
 
 const mockShops: ShopPreviewData[] = [
   {
     shopId: "1",
     shopName: "Shop 1",
-    shopPictureUrl: "https://via.placeholder.com/150",
     shopDescription: "This is a shop description",
     ownerId: "1",
+    hasOnboarded: false,
   },
   {
     shopId: "2",
     shopName: "Shop 2",
     ownerId: "1",
+    hasOnboarded: true,
+  },
+];
+
+const column: TableColumn<ShopPreviewData>[] = [
+  {
+    name: "Shop Banner",
+    cell: (row) => (
+      <Image
+        src={row.shopPictureUrl ?? "/shopPlaceholder.jpeg"}
+        alt={row.shopName}
+        borderRadius="lg"
+        w="auto"
+        objectFit={"cover"}
+        h="50px"
+      />
+    ),
+    width: "120px",
+    style: {
+      cursor: "pointer",
+    },
+  },
+  {
+    name: "Shop Name",
+    selector: (row) => row.shopName,
+    width: "300px",
+    style: {
+      cursor: "pointer",
+    },
+  },
+  {
+    name: "Shop Description",
+    selector: (row) => row.shopDescription ?? "No description provided",
+    style: {
+      cursor: "pointer",
+    },
+  },
+  {
+    cell: (row) => (
+      <HStack gap={4}>
+        <Tooltip label="Edit the storefront" placement="top" openDelay={1000}>
+          <Link as={NextLink} href={`/dashboard/shop/${row.shopId}/editor`}>
+            <EditIcon />
+          </Link>
+        </Tooltip>
+        <Tooltip label="Manage your products" placement="top" openDelay={1000}>
+          <Link as={NextLink} href={`/dashboard/shop/${row.shopId}/products`}>
+            <DragHandleIcon />
+          </Link>
+        </Tooltip>
+        <Tooltip label="Shop Settings" placement="top" openDelay={1000}>
+          <Link as={NextLink} href={`/dashboard/shop/${row.shopId}/settings`}>
+            <SettingsIcon />
+          </Link>
+        </Tooltip>
+      </HStack>
+    ),
+    ignoreRowClick: true,
   },
 ];
 
@@ -46,6 +108,7 @@ export default function Dashboard({ params }: { params: { code: string } }) {
   const setUserProfile = useUserStore((state: any) => state.setUserProfile);
   const clearCurrentShop = useShopStore((state: any) => state.clearCurrentShop);
 
+  const [isLoading, setIsLoading] = useState(true);
   useEffect(() => {
     clearCurrentShop();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -99,6 +162,7 @@ export default function Dashboard({ params }: { params: { code: string } }) {
     if (sessionToken && !userProfile) {
       getUserProfile(sessionToken);
     }
+    setIsLoading(false);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [sessionToken]);
 
@@ -115,36 +179,13 @@ export default function Dashboard({ params }: { params: { code: string } }) {
         }
         desciption="Evolve your LINE Shopping storefronts"
       />
-      <Heading as="h2" fontSize="lg">
-        Which shop do you want to manage?
-      </Heading>
-      <Flex gap={4} flexWrap="wrap">
-        {mockShops.map((shop) => (
-          <Link
-            key={shop.shopId}
-            href={`/dashboard/shop/${shop.shopId}`}
-            as={NextLink}
-            cursor="pointer"
-          >
-            <Card w="27vw" h="40vh">
-              <CardBody>
-                <Image
-                  src={shop.shopPictureUrl ?? "/shopPlaceholder.jpeg"}
-                  alt={shop.shopName}
-                  borderRadius="lg"
-                  w="100%"
-                  objectFit={"cover"}
-                  h="150px"
-                />
-                <Stack mt="6" spacing="3">
-                  <Heading size="md">{shop.shopName}</Heading>
-                  {shop.shopDescription && <Text>{shop.shopDescription}</Text>}
-                </Stack>
-              </CardBody>
-            </Card>
-          </Link>
-        ))}
-      </Flex>
+      <DataTable
+        columns={column}
+        data={mockShops}
+        onRowClicked={(row, event) => console.log(row, event)}
+        progressPending={isLoading}
+        progressComponent={<EvolveSpinner />}
+      />
     </Stack>
   );
 }
