@@ -3,7 +3,7 @@
 import { EvolveSpinner } from "@/components";
 import { Center } from "@chakra-ui/react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useEffect } from "react";
+import { Suspense, useEffect } from "react";
 
 export default function Page() {
   const navigation = useRouter();
@@ -19,8 +19,16 @@ export default function Page() {
   }, []);
 
   return (
-    <Center h="100vh" w="100%">
-      <EvolveSpinner />
-    </Center>
+    <Suspense
+      fallback={
+        <Center h="100vh" w="100%">
+          <EvolveSpinner />
+        </Center>
+      }
+    >
+      <Center h="100vh" w="100%">
+        <EvolveSpinner />
+      </Center>
+    </Suspense>
   );
 }
