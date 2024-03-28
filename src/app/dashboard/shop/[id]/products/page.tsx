@@ -1,6 +1,6 @@
 "use client";
 
-import { NextLink } from "next/link";
+import NextLink from "next/link";
 import {
   EvolveDashboardHeader,
   EvolveSpinner,
@@ -58,7 +58,7 @@ export default function Page({ params }: { params: { id: string } }) {
     async function fetchData() {
       console.log(process.env.NEXT_PUBLIC_LINE_API_KEY);
       const data = await (await fetch("/api/products")).json();
-
+      console.log(data);
       const products: ProductData[] = data.products.data.map((p) => ({
         id: p.id,
         title: p.name,

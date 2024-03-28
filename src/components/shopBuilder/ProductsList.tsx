@@ -2,8 +2,9 @@ import { Heading, Stack } from "@chakra-ui/react";
 import { HorizontalProductCard, VerticalProductCard } from ".";
 
 export type ProductData = {
+  id: string;
   title: string;
-  price: number;
+  price?: number;
   image: string;
   description: string;
 };

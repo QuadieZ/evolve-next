@@ -78,7 +78,6 @@ export default function Layout({
       !currentShop?.shopId ||
       (currentShop as ShopDetailData).shopId !== shopId
     ) {
-      console.log("getting");
       getShopData(shopId);
     } else {
       setIsLoading(false);

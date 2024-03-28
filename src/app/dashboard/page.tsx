@@ -22,19 +22,69 @@ import { useEffect, useState } from "react";
 import DataTable, { TableColumn } from "react-data-table-component";
 import { DragHandleIcon, EditIcon, SettingsIcon } from "@chakra-ui/icons";
 
+const columns: TableColumn<ShopPreviewData>[] = [
+  {
+    cell: (row) => (
+      <Image
+        src="/shopPlaceholder.jpeg"
+        alt={row.shopName}
+        borderRadius="lg"
+        w="auto"
+        objectFit={"cover"}
+        h="50px"
+      />
+    ),
+    width: "120px",
+    style: {
+      cursor: "pointer",
+    },
+  },
+  {
+    name: "Shop",
+    selector: (row) => row.shopName,
+    width: "200px",
+  },
+  {
+    name: "Description",
+    selector: (row) => row.shopDescription ?? "No description",
+  },
+  {
+    name: "Actions",
+    cell: (row) => (
+      <HStack spacing={4}>
+        <Tooltip label="Edit storefront">
+          <Link as={NextLink} href={`/dashboard/shop/${row.shopId}/editor`}>
+            <EditIcon />
+          </Link>
+        </Tooltip>
+        <Tooltip label="Manage Product">
+          <Link as={NextLink} href={`/dashboard/shop/${row.shopId}/products`}>
+            <DragHandleIcon />
+          </Link>
+        </Tooltip>
+        <Tooltip label="Settings">
+          <Link href={`/dashboard/shop/${row.shopId}/settings`} as={NextLink}>
+            <SettingsIcon />
+          </Link>
+        </Tooltip>
+      </HStack>
+    ),
+  },
+];
+
 const mockShops: ShopPreviewData[] = [
   {
     shopId: "1",
     shopName: "Shop 1",
     shopDescription: "This is a shop description",
     ownerId: "1",
-    hasOnboarded:true
+    hasOnboarded: true,
   },
   {
     shopId: "2",
     shopName: "Shop 2",
     ownerId: "1",
-    hasOnboarded:true
+    hasOnboarded: true,
   },
 ];
 
@@ -123,7 +173,7 @@ export default function Dashboard({ params }: { params: { code: string } }) {
         desciption="Evolve your LINE Shopping storefronts"
       />
       <DataTable
-        columns={column}
+        columns={columns}
         data={mockShops}
         onRowClicked={(row, event) => console.log(row, event)}
         progressPending={isLoading}

@@ -44,6 +44,10 @@ export const productMainCategoryOptions = [
 export const productSubCategoryOptions: Record<number, { name: string, value: number }[]> = {
     1: [
         {
+            name: 'None',
+            value: 0
+        },
+        {
             name: "Cosmetic",
             value: 1
         },
@@ -106,6 +110,10 @@ export const productSubCategoryOptions: Record<number, { name: string, value: nu
     ],
     17: [
         {
+            name: 'None',
+            value: 0
+        },
+        {
             name: "Street Food",
             value: 1
         },
@@ -160,6 +168,10 @@ export const productSubCategoryOptions: Record<number, { name: string, value: nu
     ],
     31: [
         {
+            name: 'None',
+            value: 0
+        },
+        {
             name: "Tops",
             value: 1
         },
@@ -206,6 +218,10 @@ export const productSubCategoryOptions: Record<number, { name: string, value: nu
     ],
     43: [
         {
+            name: 'None',
+            value: 0
+        },
+        {
             name: "Tops",
             value: 1
         },
@@ -235,6 +251,10 @@ export const productSubCategoryOptions: Record<number, { name: string, value: nu
         },
     ],
     51: [
+        {
+            name: 'None',
+            value: 0
+        },
         {
             name: "Tops",
             value: 1
