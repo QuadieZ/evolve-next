@@ -31,17 +31,6 @@ export const ProductsList = (props: ProductsListProps) => {
 
   const [fetchProducts, setFetchProducts] = useState([]);
 
-  const navigation = useRouter();
-  const searchParams = useSearchParams();
-  useEffect(() => {
-    const shopIdFromLiff = searchParams.get("liff.state");
-    console.log(shopIdFromLiff);
-    if (shopIdFromLiff) {
-      const id = shopIdFromLiff.split("F")[1];
-      console.log(id);
-      navigation.push(`/storefront/${id}`);
-    }
-  }, []);
   useEffect(() => {
     async function fetchData() {
       console.log(process.env.NEXT_PUBLIC_LINE_API_KEY);
