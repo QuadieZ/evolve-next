@@ -28,70 +28,13 @@ const mockShops: ShopPreviewData[] = [
     shopName: "Shop 1",
     shopDescription: "This is a shop description",
     ownerId: "1",
-    hasOnboarded: false,
+    hasOnboarded:true
   },
   {
     shopId: "2",
     shopName: "Shop 2",
     ownerId: "1",
-    hasOnboarded: true,
-  },
-];
-
-const column: TableColumn<ShopPreviewData>[] = [
-  {
-    name: "Shop Banner",
-    cell: (row) => (
-      <Image
-        src={row.shopPictureUrl ?? "/shopPlaceholder.jpeg"}
-        alt={row.shopName}
-        borderRadius="lg"
-        w="auto"
-        objectFit={"cover"}
-        h="50px"
-      />
-    ),
-    width: "120px",
-    style: {
-      cursor: "pointer",
-    },
-  },
-  {
-    name: "Shop Name",
-    selector: (row) => row.shopName,
-    width: "300px",
-    style: {
-      cursor: "pointer",
-    },
-  },
-  {
-    name: "Shop Description",
-    selector: (row) => row.shopDescription ?? "No description provided",
-    style: {
-      cursor: "pointer",
-    },
-  },
-  {
-    cell: (row) => (
-      <HStack gap={4}>
-        <Tooltip label="Edit the storefront" placement="top" openDelay={1000}>
-          <Link as={NextLink} href={`/dashboard/shop/${row.shopId}/editor`}>
-            <EditIcon />
-          </Link>
-        </Tooltip>
-        <Tooltip label="Manage your products" placement="top" openDelay={1000}>
-          <Link as={NextLink} href={`/dashboard/shop/${row.shopId}/products`}>
-            <DragHandleIcon />
-          </Link>
-        </Tooltip>
-        <Tooltip label="Shop Settings" placement="top" openDelay={1000}>
-          <Link as={NextLink} href={`/dashboard/shop/${row.shopId}/settings`}>
-            <SettingsIcon />
-          </Link>
-        </Tooltip>
-      </HStack>
-    ),
-    ignoreRowClick: true,
+    hasOnboarded:true
   },
 ];
 
