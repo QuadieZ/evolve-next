@@ -3,6 +3,8 @@
 import { Heading, Stack } from "@chakra-ui/react";
 import { HorizontalProductCard, VerticalProductCard } from ".";
 import { useEffect, useState } from "react";
+import { useSearchParams } from "next/navigation";
+import { useRouter } from "next/router";
 
 export type ProductData = {
   id: string;
@@ -29,6 +31,15 @@ export const ProductsList = (props: ProductsListProps) => {
 
   const [fetchProducts, setFetchProducts] = useState([]);
 
+  const navigation = useRouter();
+  const searchParams = useSearchParams();
+  useEffect(() => {
+    const shopIdFromLiff = searchParams.get("liff.state");
+    if (shopIdFromLiff) {
+      const id = shopIdFromLiff.split("F")[1];
+      navigation.push(`/storefront/${id}`);
+    }
+  }, []);
   useEffect(() => {
     async function fetchData() {
       console.log(process.env.NEXT_PUBLIC_LINE_API_KEY);
