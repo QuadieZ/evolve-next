@@ -19,16 +19,8 @@ export default function Page() {
   }, []);
 
   return (
-    <Suspense
-      fallback={
-        <Center h="100vh" w="100%">
-          <EvolveSpinner />
-        </Center>
-      }
-    >
-      <Center h="100vh" w="100%">
-        <EvolveSpinner />
-      </Center>
-    </Suspense>
+    <Center h="100vh" w="100%">
+      <EvolveSpinner />
+    </Center>
   );
 }
