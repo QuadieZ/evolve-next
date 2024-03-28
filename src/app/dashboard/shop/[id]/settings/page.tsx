@@ -18,10 +18,12 @@ import {
   Tabs,
   Text,
   Textarea,
+  useToast,
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
-import { ColorPicker } from "../onboarding/page";
 import { EvolveButton } from "@/components/EvolveButton";
+import { ColorPicker } from "@/components/ColorPicker";
+import supabase from "@/utils/supabase";
 
 export default function Page() {
   const currentShop = useShopStore((state) => state.currentShop);
@@ -41,6 +43,7 @@ export default function Page() {
 
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
 
+  const toast = useToast();
   useEffect(() => {
     if (!currentShop || secondaryBackgroundColor === "") return;
     if (
@@ -91,7 +94,7 @@ export default function Page() {
     }
   }, [currentShop]);
 
-  function handleSaveChange() {
+  async function handleSaveChange() {
     setCurrentShop({
       ...currentShop!,
       shopName: shopName ?? currentShop?.shopName!,
@@ -112,6 +115,38 @@ export default function Page() {
           secondaryBackgroundColor: secondaryBackgroundColor,
         },
       },
+    });
+    const { error } = await supabase!
+      .from("shopStyle")
+      .update({
+        primaryColor,
+        borderColor,
+        contrastColor,
+        textColor,
+        backgroundColor,
+        secondaryBackgroundColor,
+        logo: logo ? logo : null,
+      })
+      .eq("shopStyleId", currentShop?.shopStyleId);
+
+    if (error) {
+      console.log(error);
+      toast({
+        title: "Error",
+        description: "Please try again",
+        status: "error",
+        duration: 9000,
+        isClosable: true,
+      });
+      return;
+    }
+
+    toast({
+      title: "Saved!",
+      description: "Your changes have been saved",
+      status: "success",
+      duration: 3000,
+      isClosable: true,
     });
     setHasUnsavedChanges(false);
   }

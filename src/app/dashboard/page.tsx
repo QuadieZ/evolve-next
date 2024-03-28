@@ -19,9 +19,10 @@ import {
   Tooltip,
 } from "@chakra-ui/react";
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
+import { use, useEffect, useState } from "react";
 import DataTable, { TableColumn } from "react-data-table-component";
 import { DragHandleIcon, EditIcon, SettingsIcon } from "@chakra-ui/icons";
+import supabase from "@/utils/supabase";
 
 const columns: TableColumn<ShopPreviewData>[] = [
   {
@@ -73,24 +74,23 @@ const columns: TableColumn<ShopPreviewData>[] = [
   },
 ];
 
-
 const mockShops: ShopPreviewData[] = [
   {
     shopId: "1",
     shopName: "Shop 1",
     shopDescription: "This is a shop description",
     ownerId: "1",
-    hasOnboarded:true
+    hasOnboarded: true,
   },
   {
     shopId: "2",
     shopName: "Shop 2",
     ownerId: "1",
-    hasOnboarded:true
+    hasOnboarded: true,
   },
 ];
 
-export default function Dashboard({ params }: { params: { code: string,id:string } }) {
+export default function Dashboard({ params }: { params: { code: string } }) {
   const router = useRouter();
   const pathname = usePathname();
   const code = params.code;
@@ -103,52 +103,13 @@ export default function Dashboard({ params }: { params: { code: string,id:string
   const setUserProfile = useUserStore((state: any) => state.setUserProfile);
   const clearCurrentShop = useShopStore((state: any) => state.clearCurrentShop);
 
+  const [shopData, setShopData] = useState<ShopPreviewData[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   useEffect(() => {
     clearCurrentShop();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-const shopId = params.id;
-const currentShop = useShopStore((state) => state.currentShop);
-
-  useEffect(() => {
-    async function getShopData(shopId:string) {
-      const supabase = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!,process.env.NEXT_PUBLIC_SUPABASE_API_KEY!);
-      console.log(supabase, 'supabase')
-      const { data, error } = await supabase
-          .from('shop')
-          .select('*')
-    
-      if (error) {
-          console.error('Error fetching data:', error.message);
-          return;
-      }
-    
-      console.log('Shop data:', data);
-      return data
-    }
-    
-    const [setShopData, setIsLoading] = useState(true);
- 
-
-
-    
-    
-
-    console.log('currentshop',currentShop)
-      if (!currentShop||(currentShop as ShopDetailData)?.shopId !== shopId) {
-        console.log("getting");
-        console.log("getting");
-        getShopData(shopId);
-      } else {
-        setIsLoading(false);
-      }
-    
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentShop]);
-  
   useEffect(() => {
     async function getSessionToken(code: string) {
       const sessionToken = await fetch(
@@ -197,10 +158,31 @@ const currentShop = useShopStore((state) => state.currentShop);
     if (sessionToken && !userProfile) {
       getUserProfile(sessionToken);
     }
-    setIsLoading(false);
+
+    async function getAllShops() {
+      const { data, error } = await supabase!.from("shop").select("*");
+      if (error) {
+        console.error("Error fetching data:", error.message);
+        return;
+      }
+
+      setShopData(
+        data.map((shop) => ({
+          shopId: shop.shopId,
+          shopName: shop.shopName,
+          shopDescription: shop.shopDescription,
+          ownerId: shop.ownerId,
+          hasOnboarded: shop.hasOnboarded,
+        }))
+      );
+      setIsLoading(false);
+    }
+
+    getAllShops();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [sessionToken]);
 
+  console.log(shopData);
   return (
     <Stack gap={8}>
       <EvolveDashboardHeader
@@ -216,7 +198,7 @@ const currentShop = useShopStore((state) => state.currentShop);
       />
       <DataTable
         columns={columns}
-        data={mockShops}
+        data={shopData}
         onRowClicked={(row, event) => console.log(row, event)}
         progressPending={isLoading}
         progressComponent={<EvolveSpinner />}

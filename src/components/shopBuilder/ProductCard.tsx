@@ -120,6 +120,7 @@ export const HorizontalProductCard = (props: ProductCardProps) => {
       borderWidth={variant === "modern" ? "none" : "1px"}
       borderColor="black"
       pos="relative"
+      bg="white"
     >
       <Image
         src={image}

@@ -5,6 +5,13 @@ export const theme = extendTheme({
         initialColorMode: 'light',
         useSystemColorMode: false
     } as ThemeConfig,
+    styles: {
+        global: {
+            'html, body': {
+                background: 'brand.background.primary',
+            }
+        }
+    },
     colors: {
         brand: {
             primary: "#00C700",
@@ -21,4 +28,21 @@ export const theme = extendTheme({
             item: '#E6E6E6'
         }
     },
+    components: {
+        Button: {
+            variants: {
+                solid: {
+                    bg: 'brand.primary',
+                    color: 'brand.contrast',
+                    _hover: {
+                        bg: 'brand.hoverPrimary'
+                    },
+                    _active: {
+                        bg: 'brand.hoverPrimary'
+                    }
+                },
+            }
+        },
+
+    }
 })
