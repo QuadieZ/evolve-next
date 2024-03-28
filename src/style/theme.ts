@@ -21,4 +21,21 @@ export const theme = extendTheme({
             item: '#E6E6E6'
         }
     },
+    components: {
+        Button: {
+            variants: {
+                solid: {
+                    bg: 'brand.primary',
+                    color: 'brand.contrast',
+                    _hover: {
+                        bg: 'brand.hoverPrimary'
+                    },
+                    _active: {
+                        bg: 'brand.hoverPrimary'
+                    }
+                },
+            }
+        },
+
+    }
 })

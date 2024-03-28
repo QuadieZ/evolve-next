@@ -1,5 +1,6 @@
 "use client";
 
+import { NextLink } from "next/link";
 import {
   EvolveDashboardHeader,
   EvolveSpinner,
@@ -7,14 +8,40 @@ import {
 } from "@/components";
 import { EvolveButton } from "@/components/EvolveButton";
 import { mockProducts } from "@/mockData";
-import { Button, Flex, HStack, Stack, Text } from "@chakra-ui/react";
+import {
+  Button,
+  Flex,
+  HStack,
+  Image,
+  Link,
+  Stack,
+  Text,
+} from "@chakra-ui/react";
+import axios from "axios";
 import { useEffect, useState } from "react";
 import DataTable, { TableColumn } from "react-data-table-component";
 
 const columns: TableColumn<ProductData>[] = [
   {
+    cell: (row) => (
+      <Image
+        src={row.image ?? "/shopPlaceholder.jpeg"}
+        alt={row.title}
+        borderRadius="lg"
+        w="auto"
+        objectFit={"cover"}
+        h="50px"
+      />
+    ),
+    width: "120px",
+    style: {
+      cursor: "pointer",
+    },
+  },
+  {
     name: "Product",
     selector: (row) => row.title,
+    width: "200px",
   },
   {
     name: "Description",
@@ -22,63 +49,55 @@ const columns: TableColumn<ProductData>[] = [
   },
 ];
 
-export default function Page() {
+export default function Page({ params }: { params: { id: string } }) {
+  const { id } = params;
   const [isLoading, setIsLoading] = useState(true);
+  const [products, setProducts] = useState<ProductData[]>([]);
 
   useEffect(() => {
     async function fetchData() {
-      const data = await fetch(
-        process.env.NEXT_PUBLIC_LINE_API_ENDPOINT + "/myshop/v1/products",
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            mode: "no-cors",
-            "X-API-KEY": process.env.NEXT_PUBLIC_LINE_API_KEY!,
-            "Access-Control-Allow-Origin": "*",
-          },
-        }
-      ).catch((err) => console.log(err));
+      console.log(process.env.NEXT_PUBLIC_LINE_API_KEY);
+      const data = await (await fetch("/api/products")).json();
 
-      console.log(data);
-    }
-    const timeout = setTimeout(() => {
+      const products: ProductData[] = data.products.data.map((p) => ({
+        id: p.id,
+        title: p.name,
+        description: p.description,
+        image: p.imageUrls[0],
+      }));
+
+      setProducts(products);
       setIsLoading(false);
-    }, 500);
+    }
 
+    console.log("fetching data");
     fetchData();
-    return () => clearTimeout(timeout);
   }, []);
 
   return (
-    <Stack h="100%">
+    <Stack h="100%" w="100%">
       <HStack justify="space-between">
         <EvolveDashboardHeader
           header="Products"
           desciption="Create, Edit, Delete, and Manage your products"
         />
-        <EvolveButton
-          flex="none"
-          h="40px"
-          px={8}
-          borderRadius="lg"
-          fontSize="md"
-        >
-          Add Products
-        </EvolveButton>
+        <Link href={`/dashboard/shop/${id}/products/create`} as={NextLink}>
+          <Button>Create Products</Button>
+        </Link>
       </HStack>
       <Flex flex={1}>
         <DataTable
           columns={columns}
-          data={mockProducts}
+          data={products}
           progressPending={isLoading}
           progressComponent={<EvolveSpinner />}
           fixedHeader
           fixedHeaderScrollHeight="500px"
           customStyles={{
-            tableWrapper: {
+            cells: {
               style: {
-                backgroundColor: "red",
+                paddingTop: "4px",
+                paddingBottom: "4px",
               },
             },
           }}

@@ -74,18 +74,18 @@ export default function Layout({
       setIsLoading(false);
     }
 
-    if (currentShop) {
-      if ((currentShop as ShopDetailData)?.shopId !== shopId) {
-        console.log("getting");
-        console.log("getting");
-        getShopData(shopId);
-      } else {
-        setIsLoading(false);
-      }
+    if (
+      !currentShop?.shopId ||
+      (currentShop as ShopDetailData).shopId !== shopId
+    ) {
+      console.log("getting");
+      getShopData(shopId);
+    } else {
+      setIsLoading(false);
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentShop]);
+  }, []);
 
   if (isLoading) {
     return <EvolveSpinner />;
