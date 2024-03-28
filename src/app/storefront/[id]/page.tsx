@@ -106,6 +106,7 @@ export default function Page({ params }: { params: { id: string } }) {
           py={12}
           overflowY="scroll"
           suppressHydrationWarning
+          bg="shop.background"
         >
           {components.map((c) => (
             <ComponentRenderer key={c.name} {...c} />
