@@ -11,7 +11,13 @@ export default function Page() {
   useEffect(() => {
     const shopIdFromLiff = searchParams.get("liff.state");
     if (shopIdFromLiff) {
-      navigation.push(`/storefront${shopIdFromLiff}`);
+      const timeout = setTimeout(() => {
+        navigation.push(`/storefront${shopIdFromLiff}`);
+      }, 5000);
+
+      return () => {
+        clearTimeout(timeout);
+      };
     }
   }, []);
 
