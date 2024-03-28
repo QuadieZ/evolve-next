@@ -75,7 +75,8 @@ export const EvolveNavBar = () => {
         gap={2}
         onClick={() =>
           router.replace(
-            showDashboardMenu ? `/dashboard/shop/${shopId}` : "/dashboard"
+            //showDashboardMenu ? `/dashboard/shop/${shopId}` : "/dashboard"
+            "/dashboard"
           )
         }
         cursor="pointer"

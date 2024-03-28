@@ -1,7 +1,7 @@
 "use client";
 
 import NextLink from "next/link";
-import { EvolveDashboardHeader } from "@/components";
+import { EvolveDashboardHeader, EvolveSpinner } from "@/components";
 import { useShopStore, useUserStore } from "@/state";
 import { ShopPreviewData } from "@/types";
 import {
@@ -9,20 +9,23 @@ import {
   Card,
   CardBody,
   Flex,
+  HStack,
   Heading,
   Image,
   Link,
   Stack,
   Text,
+  Tooltip,
 } from "@chakra-ui/react";
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import DataTable, { TableColumn } from "react-data-table-component";
+import { DragHandleIcon, EditIcon, SettingsIcon } from "@chakra-ui/icons";
 
 const mockShops: ShopPreviewData[] = [
   {
     shopId: "1",
     shopName: "Shop 1",
-    shopPictureUrl: "https://via.placeholder.com/150",
     shopDescription: "This is a shop description",
     ownerId: "1",
     hasOnboarded:true
@@ -48,6 +51,7 @@ export default function Dashboard({ params }: { params: { code: string } }) {
   const setUserProfile = useUserStore((state: any) => state.setUserProfile);
   const clearCurrentShop = useShopStore((state: any) => state.clearCurrentShop);
 
+  const [isLoading, setIsLoading] = useState(true);
   useEffect(() => {
     clearCurrentShop();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -101,6 +105,7 @@ export default function Dashboard({ params }: { params: { code: string } }) {
     if (sessionToken && !userProfile) {
       getUserProfile(sessionToken);
     }
+    setIsLoading(false);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [sessionToken]);
 
@@ -117,36 +122,13 @@ export default function Dashboard({ params }: { params: { code: string } }) {
         }
         desciption="Evolve your LINE Shopping storefronts"
       />
-      <Heading as="h2" fontSize="lg">
-        Which shop do you want to manage?
-      </Heading>
-      <Flex gap={4} flexWrap="wrap">
-        {mockShops.map((shop) => (
-          <Link
-            key={shop.shopId}
-            href={`/dashboard/shop/${shop.shopId}`}
-            as={NextLink}
-            cursor="pointer"
-          >
-            <Card w="27vw" h="40vh">
-              <CardBody>
-                <Image
-                  src={shop.shopPictureUrl ?? "/shopPlaceholder.jpeg"}
-                  alt={shop.shopName}
-                  borderRadius="lg"
-                  w="100%"
-                  objectFit={"cover"}
-                  h="150px"
-                />
-                <Stack mt="6" spacing="3">
-                  <Heading size="md">{shop.shopName}</Heading>
-                  {shop.shopDescription && <Text>{shop.shopDescription}</Text>}
-                </Stack>
-              </CardBody>
-            </Card>
-          </Link>
-        ))}
-      </Flex>
+      <DataTable
+        columns={column}
+        data={mockShops}
+        onRowClicked={(row, event) => console.log(row, event)}
+        progressPending={isLoading}
+        progressComponent={<EvolveSpinner />}
+      />
     </Stack>
   );
 }
