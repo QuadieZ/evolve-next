@@ -10,11 +10,8 @@ export default function Page() {
   const searchParams = useSearchParams();
   useEffect(() => {
     const shopIdFromLiff = searchParams.get("liff.state");
-    console.log(shopIdFromLiff);
     if (shopIdFromLiff) {
-      const id = shopIdFromLiff.split("F")[1];
-      console.log(id);
-      navigation.push(`/storefront/${id}`);
+      navigation.push(`/storefront${shopIdFromLiff}`);
     }
   }, []);
 
