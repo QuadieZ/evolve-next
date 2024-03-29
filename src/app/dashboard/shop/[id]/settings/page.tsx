@@ -95,6 +95,13 @@ export default function Page() {
   }, [currentShop]);
 
   async function handleSaveChange() {
+    const { data, error: imageError } = await supabase!.storage
+      .from("logo")
+      .upload(
+        `public/logo/${shopName}.${logo?.type === "image/jpg" ? "jpg" : "png"}`,
+        logo!
+      );
+
     setCurrentShop({
       ...currentShop!,
       shopName: shopName ?? currentShop?.shopName!,
@@ -105,7 +112,7 @@ export default function Page() {
           : URL.createObjectURL(shopBanner!)) ?? currentShop?.shopPictureUrl,
       shopStyle: {
         ...currentShop?.shopStyle!,
-        logo: logo ?? currentShop?.shopStyle?.logo ?? null,
+        logo: logo ?? null,
         colors: {
           primaryColor: primaryColor,
           borderColor: borderColor,
@@ -128,6 +135,13 @@ export default function Page() {
         logo: logo ? logo : null,
       })
       .eq("shopStyleId", currentShop?.shopStyleId);
+
+    const { error: shopError } = await supabase!
+      .from("shop")
+      .update({
+        shopName: shopName,
+      })
+      .eq("shopId", currentShop?.shopId);
 
     if (error) {
       console.log(error);

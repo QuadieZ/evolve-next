@@ -55,7 +55,12 @@ export const ComponentRenderer = (props: ComponentRendererProps) => {
   }
 
   if (name === "ImageBanner") {
-    return <ImageBanner {...(componentProps as ImageBannerProps)} />;
+    return (
+      <ImageBanner
+        {...(componentProps as ImageBannerProps)}
+        src={currentShop?.shopPictureUrl ?? "/shopPlaceholder.jpeg"}
+      />
+    );
   }
 
   if (name === "ProductsList") {

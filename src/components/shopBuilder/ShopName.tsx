@@ -28,7 +28,7 @@ export const ShopName = (props: ShopNameProps) => {
   return (
     <Stack w="100%" spacing={4} pos="relative">
       <HStack>
-        {logo && <Image src={logo} boxSize="50px" alt="shop logo" />}
+        {/* {logo && <Image src={logo} boxSize="50px" alt="shop logo" />} */}
         <Stack spacing={1}>
           <Heading
             fontWeight="medium"
