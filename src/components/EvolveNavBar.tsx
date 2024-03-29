@@ -8,6 +8,7 @@ import {
   DragHandleIcon,
   EditIcon,
   HamburgerIcon,
+  LinkIcon,
   SettingsIcon,
   StarIcon,
 } from "@chakra-ui/icons";
@@ -23,6 +24,7 @@ import {
   MenuDivider,
   MenuItem,
   MenuList,
+  useClipboard,
   useToast,
 } from "@chakra-ui/react";
 import { usePathname, useRouter } from "next/navigation";
@@ -41,6 +43,7 @@ export const EvolveNavBar = () => {
   const shopStyle = useShopStore((state) => state.currentShop?.shopStyle);
   const setShopStyle = useShopStore((state) => state.setShopStyle);
 
+  const { onCopy } = useClipboard();
   const showDashboardMenu =
     pathname.includes("shop") && !pathname.includes("onboarding");
   const isEditor = pathname.includes("editor");
@@ -132,6 +135,22 @@ export const EvolveNavBar = () => {
               Manage Your Shop
             </MenuButton>
             <MenuList>
+              <MenuItem
+                icon={<LinkIcon />}
+                onClick={() => {
+                  navigator.clipboard.writeText(
+                    `https://evolve-next.vercel.app/storefront/${currentShop?.shopId}`
+                  );
+                  toast({
+                    title: "Link copied",
+                    status: "success",
+                    duration: 2000,
+                    isClosable: true,
+                  });
+                }}
+              >
+                Share this store
+              </MenuItem>
               <MenuItem
                 icon={<EditIcon />}
                 as={NextLink}

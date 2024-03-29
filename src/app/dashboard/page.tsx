@@ -17,62 +17,19 @@ import {
   Stack,
   Text,
   Tooltip,
+  useClipboard,
+  useToast,
 } from "@chakra-ui/react";
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
 import { use, useEffect, useState } from "react";
 import DataTable, { TableColumn } from "react-data-table-component";
-import { DragHandleIcon, EditIcon, SettingsIcon } from "@chakra-ui/icons";
+import {
+  DragHandleIcon,
+  EditIcon,
+  LinkIcon,
+  SettingsIcon,
+} from "@chakra-ui/icons";
 import supabase from "@/utils/supabase";
-
-const columns: TableColumn<ShopPreviewData>[] = [
-  {
-    cell: (row) => (
-      <Image
-        src="/shopPlaceholder.jpeg"
-        alt={row.shopName}
-        borderRadius="lg"
-        w="auto"
-        objectFit={"cover"}
-        h="50px"
-      />
-    ),
-    width: "120px",
-    style: {
-      cursor: "pointer",
-    },
-  },
-  {
-    name: "Shop",
-    selector: (row) => row.shopName,
-    width: "200px",
-  },
-  {
-    name: "Description",
-    selector: (row) => row.shopDescription ?? "No description",
-  },
-  {
-    name: "Actions",
-    cell: (row) => (
-      <HStack spacing={4}>
-        <Tooltip label="Edit storefront">
-          <Link as={NextLink} href={`/dashboard/shop/${row.shopId}/editor`}>
-            <EditIcon />
-          </Link>
-        </Tooltip>
-        <Tooltip label="Manage Product">
-          <Link as={NextLink} href={`/dashboard/shop/${row.shopId}/products`}>
-            <DragHandleIcon />
-          </Link>
-        </Tooltip>
-        <Tooltip label="Settings">
-          <Link href={`/dashboard/shop/${row.shopId}/settings`} as={NextLink}>
-            <SettingsIcon />
-          </Link>
-        </Tooltip>
-      </HStack>
-    ),
-  },
-];
 
 const mockShops: ShopPreviewData[] = [
   {
@@ -103,6 +60,7 @@ export default function Dashboard({ params }: { params: { code: string } }) {
   const setUserProfile = useUserStore((state: any) => state.setUserProfile);
   const clearCurrentShop = useShopStore((state: any) => state.clearCurrentShop);
 
+  const toast = useToast();
   const [shopData, setShopData] = useState<ShopPreviewData[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   useEffect(() => {
@@ -182,6 +140,72 @@ export default function Dashboard({ params }: { params: { code: string } }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [sessionToken]);
 
+  const columns: TableColumn<ShopPreviewData>[] = [
+    {
+      cell: (row) => (
+        <Image
+          src="/shopPlaceholder.jpeg"
+          alt={row.shopName}
+          borderRadius="lg"
+          w="auto"
+          objectFit={"cover"}
+          h="50px"
+        />
+      ),
+      width: "120px",
+      style: {
+        cursor: "pointer",
+      },
+    },
+    {
+      name: "Shop",
+      selector: (row) => row.shopName,
+      width: "200px",
+    },
+    {
+      name: "Description",
+      selector: (row) => row.shopDescription ?? "No description",
+    },
+    {
+      name: "Actions",
+      cell: (row) => (
+        <HStack spacing={4}>
+          <Tooltip label="Share this store">
+            <LinkIcon
+              cursor="pointer"
+              onClick={() => {
+                navigator.clipboard.writeText(
+                  `https://evolve-next.vercel.app/storefront/${row.shopId}`
+                );
+                toast({
+                  title: "Link copied",
+                  status: "success",
+                  duration: 2000,
+                  isClosable: true,
+                });
+              }}
+            />
+          </Tooltip>
+          <Tooltip label="Edit storefront">
+            <Link as={NextLink} href={`/dashboard/shop/${row.shopId}/editor`}>
+              <EditIcon />
+            </Link>
+          </Tooltip>
+          <Tooltip label="Manage Product">
+            <Link as={NextLink} href={`/dashboard/shop/${row.shopId}/products`}>
+              <DragHandleIcon />
+            </Link>
+          </Tooltip>
+          <Tooltip label="Settings">
+            <Link href={`/dashboard/shop/${row.shopId}/settings`} as={NextLink}>
+              <SettingsIcon />
+            </Link>
+          </Tooltip>
+        </HStack>
+      ),
+    },
+  ];
+
   console.log(shopData);
   return (
     <Stack gap={8}>
@@ -199,7 +223,9 @@ export default function Dashboard({ params }: { params: { code: string } }) {
       <DataTable
         columns={columns}
         data={shopData}
-        onRowClicked={(row, event) => console.log(row, event)}
+        onRowClicked={(row, event) =>
+          router.push(`/dashboard/shop/${row.shopId}/editor`)
+        }
         progressPending={isLoading}
         progressComponent={<EvolveSpinner />}
       />
